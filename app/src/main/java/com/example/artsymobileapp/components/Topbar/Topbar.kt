@@ -3,13 +3,7 @@
 package com.example.artsymobileapp.components.Topbar
 
 import ArtistSearchBar
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,60 +18,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 
-val topbar_container = Modifier
-    .fillMaxWidth()
-    .padding(horizontal = 12.dp)
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
-val search_icon = Modifier.padding(top = 8.dp)
-val close_icon = Modifier.padding(top = 8.dp)
-
-
-@Preview
 @Composable
-fun TopBar() {
+fun TopBar(viewModel: ArtsyViewModel) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
-    TopAppBar(
-        title = {
-            if (isSearching) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = topbar_container
 
-                ) {
-                    Box(modifier = search_icon) {
-                        Icon(
-                            Icons.Default.Search, contentDescription = "Search"
-                        )
-                    }
+    if (isSearching) {
+        ArtistSearchBar(
+            isSearching = isSearching,
+            viewModel = viewModel,
+            setIsSearching = { isSearching = it }
+        )
+    } else {
+        TopAppBar(
+            title = {
 
-
-                    ArtistSearchBar(isSearching = isSearching)
-
-
-                }
-            } else {
                 Text("Artsy Search")
 
-            }
-        },
-        actions = {
-            if (isSearching) {
-                Box(modifier = close_icon) {
-                    IconButton(onClick = {
-                        isSearching = false
-                    }) {
-                        Icon(
-                            Icons.Default.Clear, contentDescription = "Close"
-                        )
-                    }
-                }
-            } else {
+
+            },
+            actions = {
+
                 IconButton(onClick = { isSearching = true }) {
                     Icon(
                         Icons.Default.Search, contentDescription = "Search"
@@ -87,12 +50,15 @@ fun TopBar() {
                     Icon(
                         Icons.Default.Person, contentDescription = "Profile"
                     )
+
                 }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
-        ),
-    )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ),
+        )
+    }
+
+
 }

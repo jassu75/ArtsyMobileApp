@@ -1,0 +1,57 @@
+package com.example.artsymobileapp.components.network.ViewModel
+
+import ArtistListType
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.artsymobileapp.components.network.ArtsyAPI
+import kotlinx.coroutines.launch
+
+
+sealed interface ArtistListUiState {
+    data class Success(val artists: List<ArtistListType>) : ArtistListUiState
+    object Error : ArtistListUiState
+    object Loading : ArtistListUiState
+}
+
+class ArtsyViewModel : ViewModel() {
+
+    var artistListUiState: ArtistListUiState by mutableStateOf(ArtistListUiState.Loading)
+        private set
+
+    fun getArtistList(artistName: String) {
+        viewModelScope.launch {
+            if (artistName.length > 3) {
+                try {
+
+                    artistListUiState = ArtistListUiState.Loading
+                    val artistList = ArtsyAPI.retrofitService.getArtistList(artistName)
+                    val refinedList = artistList.map { artistInfo ->
+
+                        val image =
+                            if (artistInfo._links.thumbnail.href == "/assets/shared/missing_image.png")
+                                "/assets/artsy_logo.svg"
+                            else
+                                artistInfo._links.thumbnail.href
+
+                        ArtistListType(
+                            id = artistInfo._links.self.href?.split("/")?.last().orEmpty(),
+                            title = artistInfo.title,
+                            image = image
+                        )
+                    }
+                    artistListUiState = ArtistListUiState.Success(refinedList)
+
+                } catch (e: Exception) {
+                    Log.e("FETCHARTISTLIST", "Error occured fetching artistList", e)
+                    artistListUiState = ArtistListUiState.Error
+                }
+            } else {
+                artistListUiState = ArtistListUiState.Success(emptyList())
+            }
+        }
+    }
+}
