@@ -1,26 +1,40 @@
-import android.util.Log
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.artsymobileapp.components.ArtistList.ArtistCard
 import com.example.artsymobileapp.components.network.ViewModel.ArtistListUiState
+
+val artistlist_container = Modifier
+    .fillMaxWidth()
+    .padding(horizontal = 20.dp, vertical = 20.dp)
+
 
 @Composable
 fun Artistlist(artistList: ArtistListUiState) {
     if (artistList is ArtistListUiState.Success) {
-        val artists = artistList.artists
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+        LazyColumn(
+            modifier = artistlist_container,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(
-                text = artists.joinToString("\n\n") { artist ->
-                    "Name: ${artist.title}\nID: ${artist.id}\nImage: ${artist.image}"
+            items(artistList.artistListDetails) { artistInfo ->
+                Box(modifier = Modifier.fillMaxWidth())
+                {
+                    ArtistCard(
+                        id = artistInfo.id,
+                        title = artistInfo.title,
+                        image = artistInfo.image
+                    )
                 }
-            )
+            }
+
         }
-        Log.i("ArtistList", "$artists")
+
+
     }
 }

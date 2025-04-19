@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 
 sealed interface ArtistListUiState {
-    data class Success(val artists: List<ArtistListType>) : ArtistListUiState
+    data class Success(val artistListDetails: List<ArtistListType>) : ArtistListUiState
     object Error : ArtistListUiState
     object Loading : ArtistListUiState
 }
