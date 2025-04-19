@@ -61,7 +61,6 @@ fun ArtistCard(id: String, title: String, image: String) {
                     painter = painterResource(id = R.drawable.artsy_logo),
                     contentDescription = "artsy_logo",
                     modifier = card_image,
-                    contentScale = ContentScale.Crop
                 )
             } else {
                 AsyncImage(
