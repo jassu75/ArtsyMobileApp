@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistList.ArtistCard
-import com.example.artsymobileapp.components.network.ViewModel.ArtistListUiState
+import com.example.artsymobileapp.components.network.ArtistListLoadingState
 
 val artistlist_container = Modifier
     .fillMaxWidth()
@@ -17,13 +17,13 @@ val artistlist_container = Modifier
 
 
 @Composable
-fun Artistlist(artistList: ArtistListUiState,navController: NavController) {
-    if ( artistList is ArtistListUiState.Success ) {
+fun Artistlist(artistList: ArtistListLoadingState,navController: NavController) {
+    if ( artistList is ArtistListLoadingState.Success ) {
         LazyColumn(
             modifier = artistlist_container,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(artistList.artistListDetails) { artistInfo ->
+            items(artistList.artistList) { artistInfo ->
                 Box(modifier = Modifier.fillMaxWidth())
                 {
                     ArtistCard(

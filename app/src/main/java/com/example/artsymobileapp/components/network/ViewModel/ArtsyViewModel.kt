@@ -7,23 +7,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ArtsyAPI
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
 
-sealed interface ArtistListUiState {
-    data class Success(val artistListDetails: List<ArtistListType>) : ArtistListUiState
-    object Error : ArtistListUiState
-    object Loading : ArtistListUiState
-}
-
 class ArtsyViewModel : ViewModel() {
 
     private var searchJob: Job?=null
 
-    var artistListUiState: ArtistListUiState by mutableStateOf(ArtistListUiState.Loading)
+    var artistListUiState: ArtistListLoadingState by mutableStateOf(ArtistListLoadingState.Loading)
         private set
 
     fun getArtistList(artistName: String) {
@@ -33,7 +28,7 @@ class ArtsyViewModel : ViewModel() {
                 delay(400)
                 try {
 
-                    artistListUiState = ArtistListUiState.Loading
+                    artistListUiState = ArtistListLoadingState.Loading
                     val artistList = ArtsyAPI.retrofitService.getArtistList(artistName)
                     val refinedList = artistList.map { artistInfo ->
 
@@ -49,14 +44,14 @@ class ArtsyViewModel : ViewModel() {
                             image = image
                         )
                     }
-                    artistListUiState = ArtistListUiState.Success(refinedList)
+                    artistListUiState = ArtistListLoadingState.Success(refinedList)
 
                 } catch (e: Exception) {
                     Log.e("FETCHARTISTLIST", "Error occured fetching artistList", e)
-                    artistListUiState = ArtistListUiState.Error
+                    artistListUiState = ArtistListLoadingState.Error
                 }
             } else {
-                artistListUiState = ArtistListUiState.Success(emptyList())
+                artistListUiState = ArtistListLoadingState.Success(emptyList())
             }
         }
     }
