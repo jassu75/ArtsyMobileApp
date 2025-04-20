@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.artsymobileapp.components.network.ArtsyAPI
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 
 sealed interface ArtistListUiState {
@@ -19,12 +21,16 @@ sealed interface ArtistListUiState {
 
 class ArtsyViewModel : ViewModel() {
 
+    private var searchJob: Job?=null
+
     var artistListUiState: ArtistListUiState by mutableStateOf(ArtistListUiState.Loading)
         private set
 
     fun getArtistList(artistName: String) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob=viewModelScope.launch {
             if (artistName.length > 3) {
+                delay(400)
                 try {
 
                     artistListUiState = ArtistListUiState.Loading

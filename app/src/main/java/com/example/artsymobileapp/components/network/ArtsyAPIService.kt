@@ -2,6 +2,7 @@
 
 package com.example.artsymobileapp.components.network
 
+import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDetailsJson
 import com.example.artsymobileapp.components.network.types.artistlisttype.ArtistListJson
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
@@ -20,6 +21,9 @@ private val retrofit = Retrofit.Builder()
 interface ArtsyApiService {
     @GET("/api/search/{artistName}")
     suspend fun getArtistList(@Path("artistName") artistName: String): ArtistListJson
+
+    @GET("/api/artistdetails/{artistId}")
+    suspend fun getArtistDetails(@Path("artistId") artistId:String): ArtistDetailsJson
 }
 
 object ArtsyAPI {
