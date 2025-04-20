@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 val searchbar = Modifier.semantics { isTraversalGroup = true }
@@ -32,7 +33,8 @@ fun fetchArtists(searchText: String, viewModel: ArtsyViewModel) {
 fun ArtistSearchBar(
     viewModel: ArtsyViewModel,
     isSearching: Boolean,
-    setIsSearching: (Boolean) -> Unit
+    setIsSearching: (Boolean) -> Unit,
+    navController: NavController
 ) {
     var searchText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
@@ -85,7 +87,7 @@ fun ArtistSearchBar(
             },
 
             ) {
-            Artistlist(viewModel.artistListUiState)
+            Artistlist(viewModel.artistListUiState,navController=navController)
         }
     }
 }

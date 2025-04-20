@@ -24,8 +24,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.artsymobileapp.R
+import com.example.artsymobileapp.components.screens.screens
 
 val card_container = Modifier
     .fillMaxWidth()
@@ -39,7 +41,7 @@ val card_image = Modifier
 val card_body_container = Modifier
     .fillMaxWidth()
     .height(50.dp)
-    .background(Color(0x80DEE6FD))
+    .background(Color(0x80BAC7E1))
 
 
 val card_body_content = Modifier
@@ -53,8 +55,10 @@ val card_title = TextStyle(
 
 
 @Composable
-fun ArtistCard(id: String, title: String, image: String) {
-    Card(modifier = card_container) {
+fun ArtistCard(id: String, title: String, image: String, navController: NavController) {
+    Card(modifier = card_container, onClick = {
+        navController.navigate(route = "${screens.ArtistDetails.name}/${id}/${title}")
+    }) {
         Box(modifier = card_content) {
             if (image == "/assets/artsy_logo.svg") {
                 Image(

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistList.ArtistCard
 import com.example.artsymobileapp.components.network.ViewModel.ArtistListUiState
 
@@ -16,8 +17,8 @@ val artistlist_container = Modifier
 
 
 @Composable
-fun Artistlist(artistList: ArtistListUiState) {
-    if (artistList is ArtistListUiState.Success) {
+fun Artistlist(artistList: ArtistListUiState,navController: NavController) {
+    if ( artistList is ArtistListUiState.Success ) {
         LazyColumn(
             modifier = artistlist_container,
             verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -28,7 +29,8 @@ fun Artistlist(artistList: ArtistListUiState) {
                     ArtistCard(
                         id = artistInfo.id,
                         title = artistInfo.title,
-                        image = artistInfo.image
+                        image = artistInfo.image,
+                        navController=navController
                     )
                 }
             }
