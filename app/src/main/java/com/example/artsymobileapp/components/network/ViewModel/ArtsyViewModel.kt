@@ -46,7 +46,7 @@ class ArtsyViewModel : ViewModel() {
                                 artistInfo._links.thumbnail.href
 
                         ArtistListType(
-                            id = artistInfo._links.self.href?.split("/")?.last().orEmpty(),
+                            id = artistInfo._links.self.href.split("/")?.last().orEmpty(),
                             title = artistInfo.title,
                             image = image
                         )
