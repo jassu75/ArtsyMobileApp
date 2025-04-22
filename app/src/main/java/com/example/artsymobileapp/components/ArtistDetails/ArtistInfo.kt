@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 
 
@@ -28,7 +29,7 @@ val bio_text = TextStyle(fontSize = 16.sp)
 
 
 @Composable
-fun ArtistInfo(artistInfo: ArtistInfoType) {
+fun ArtistInfo(artistInfo: ArtistInfoType,viewModel: ArtsyViewModel) {
     val cleanedBio =
         artistInfo.biography.replace(Regex("-\\s+"), "").replace(Regex("(?<!\n)\n(?!\n)"), " ")
 

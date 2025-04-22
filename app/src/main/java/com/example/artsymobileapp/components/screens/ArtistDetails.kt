@@ -12,21 +12,26 @@ import com.example.artsymobileapp.components.Topbar.ArtistDetailsBar
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 @Composable
-fun ArtistDetails(navController: NavController,viewModel: ArtsyViewModel,artistId: String, artistName: String) {
+fun ArtistDetails(
+    navController: NavController,
+    viewModel: ArtsyViewModel,
+    artistId: String,
+    artistName: String
+) {
 
-    LaunchedEffect (artistId){
+    LaunchedEffect(artistId) {
         viewModel.getArtistDetails(artistId)
     }
 
 
     Scaffold(
-        topBar = { ArtistDetailsBar(artistName = artistName,navController=navController) }
+        topBar = { ArtistDetailsBar(artistName = artistName, navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            ArtistDetailsTabs(artistDetails=viewModel.artistDetailsUIState)
+            ArtistDetailsTabs(artistDetails = viewModel.artistDetailsUIState, viewModel = viewModel)
 
         }
     }

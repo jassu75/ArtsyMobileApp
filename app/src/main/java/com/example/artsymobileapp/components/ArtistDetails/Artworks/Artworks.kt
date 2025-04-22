@@ -11,6 +11,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.artsymobileapp.components.ArtistDetails.CategoryDialog
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 val card_container = Modifier
     .fillMaxWidth()
@@ -43,7 +49,10 @@ val card_title = TextStyle(
 
 
 @Composable
-fun Artworks(id: String, image: String, title: String, date: String) {
+fun Artworks(id: String, image: String, title: String, date: String, viewModel: ArtsyViewModel) {
+
+    var showCategories by remember { mutableStateOf(false) }
+
 
     Card(modifier = card_container) {
         Column(modifier = card_content) {
@@ -59,7 +68,7 @@ fun Artworks(id: String, image: String, title: String, date: String) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "$title, $date", style = card_title, textAlign = TextAlign.Center)
-                Button(onClick = {}) {
+                Button(onClick = { showCategories = true }) {
                     Text(
                         text = "View Categories",
                     )
@@ -67,6 +76,10 @@ fun Artworks(id: String, image: String, title: String, date: String) {
             }
         }
 
+    }
+
+    if (showCategories) {
+        CategoryDialog(artworkId = id, handleClose = { showCategories = false },viewModel=viewModel)
     }
 
 }

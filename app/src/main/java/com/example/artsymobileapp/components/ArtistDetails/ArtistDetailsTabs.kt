@@ -15,13 +15,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.example.artsymobileapp.components.ArtistDetails.Artworks.Artworks
+import com.example.artsymobileapp.components.ArtistDetails.Artworks.ArtworksList
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 val icon_container = Modifier.fillMaxWidth()
 
 @Composable
-fun ArtistDetailsTabs(artistDetails:ArtistDetailsLoadingState) {
+fun ArtistDetailsTabs(
+    artistDetails: ArtistDetailsLoadingState,
+    viewModel: ArtsyViewModel
+) {
 
     val tabs = listOf("ArtistInfo", "Artworks")
     var currentTab by remember { mutableStateOf("ArtistInfo") }
@@ -39,6 +43,7 @@ fun ArtistDetailsTabs(artistDetails:ArtistDetailsLoadingState) {
                             "ArtistInfo" -> Icon(
                                 Icons.Default.Info, contentDescription = "Artist Details"
                             )
+
                             "Artworks" -> Icon(
                                 Icons.Default.AccountBox, contentDescription = "Artworks"
                             )
@@ -49,17 +54,19 @@ fun ArtistDetailsTabs(artistDetails:ArtistDetailsLoadingState) {
 
         }
 
-        if(artistDetails is ArtistDetailsLoadingState.Loading)
-        {
+        if (artistDetails is ArtistDetailsLoadingState.Loading) {
             Loading()
-        }
+        } else if (artistDetails is ArtistDetailsLoadingState.Success) {
+            when (currentTab) {
+                "ArtistInfo" -> ArtistInfo(
+                    artistInfo = artistDetails.artistDetails.artistInfo,
+                    viewModel = viewModel
+                )
 
-        else if(artistDetails is ArtistDetailsLoadingState.Success)
-        {
-            when(currentTab)
-            {
-                "ArtistInfo"-> ArtistInfo(artistInfo =  artistDetails.artistDetails.artistInfo)
-                "Artworks"-> Artworks(artworklist = artistDetails.artistDetails.artWorks)
+                "Artworks" -> ArtworksList(
+                    artworklist = artistDetails.artistDetails.artWorks,
+                    viewModel = viewModel
+                )
             }
         }
     }

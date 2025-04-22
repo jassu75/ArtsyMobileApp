@@ -10,9 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ArtsyAPI
+import com.example.artsymobileapp.components.network.CategoryLoadingState
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
+import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,6 +28,9 @@ class ArtsyViewModel : ViewModel() {
         private set
 
     var artistDetailsUIState: ArtistDetailsLoadingState by mutableStateOf(ArtistDetailsLoadingState.Loading)
+        private set
+
+    var categoryUIState: CategoryLoadingState by mutableStateOf(CategoryLoadingState.Loading)
         private set
 
     fun getArtistList(artistName: String) {
@@ -46,7 +51,7 @@ class ArtsyViewModel : ViewModel() {
                                 artistInfo._links.thumbnail.href
 
                         ArtistListType(
-                            id = artistInfo._links.self.href.split("/")?.last().orEmpty(),
+                            id = artistInfo._links.self.href.split("/").last(),
                             title = artistInfo.title,
                             image = image
                         )
@@ -97,8 +102,38 @@ class ArtsyViewModel : ViewModel() {
 
 
             } catch (e: Exception) {
-                Log.e("FETCHARTISTDETAILS", "Error occured fetching artist details", e)
+                Log.e("FETCH ARTIST DETAILS", "Error occured fetching artist details", e)
                 artistListUiState = ArtistListLoadingState.Error
+            }
+
+        }
+    }
+
+    fun getCategory(artworkId: String) {
+        viewModelScope.launch {
+            try {
+
+                categoryUIState = CategoryLoadingState.Loading
+                val categoryList = ArtsyAPI.retrofitService.getCategory(artworkId)
+
+               val refinedCategory=categoryList._embedded.genes.map { category->
+                   CategoryType(
+                       id = category.id,
+                       title = category.name,
+                       image = category._links.thumbnail.href,
+                       description = category.description
+                   )
+               }
+
+
+
+                categoryUIState = CategoryLoadingState.Success(refinedCategory)
+
+
+
+            } catch (e: Exception) {
+                Log.e("FETCH CATEGORY", "Error occured fetching categories", e)
+                categoryUIState = CategoryLoadingState.Error
             }
 
         }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
 
 val artworks_container = Modifier
@@ -16,7 +17,7 @@ val artworks_container = Modifier
     .padding(horizontal = 20.dp, vertical = 20.dp)
 
 @Composable
-fun Artworks(artworklist: List<ArtworksType>) {
+fun ArtworksList(artworklist: List<ArtworksType>,viewModel: ArtsyViewModel) {
     LazyColumn(
         modifier = artworks_container,
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -28,7 +29,8 @@ fun Artworks(artworklist: List<ArtworksType>) {
                     id = artwork.id,
                     title = artwork.title,
                     image = artwork.image,
-                    date = artwork.date
+                    date = artwork.date,
+                    viewModel=viewModel
                 )
             }
         }
