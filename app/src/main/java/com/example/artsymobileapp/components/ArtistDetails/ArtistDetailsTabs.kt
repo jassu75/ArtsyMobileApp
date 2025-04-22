@@ -15,16 +15,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.artsymobileapp.components.ArtistDetails.Artworks.Artworks
+import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 
 val icon_container = Modifier.fillMaxWidth()
 
-@Preview
 @Composable
-fun ArtistDetailsTabs() {
+fun ArtistDetailsTabs(artistDetails:ArtistDetailsLoadingState) {
 
     val tabs = listOf("ArtistInfo", "Artworks")
     var currentTab by remember { mutableStateOf("ArtistInfo") }
+
     Column(modifier = icon_container) {
         TabRow(selectedTabIndex = tabs.indexOf(currentTab)) {
 
@@ -46,6 +47,20 @@ fun ArtistDetailsTabs() {
                 )
             }
 
+        }
+
+        if(artistDetails is ArtistDetailsLoadingState.Loading)
+        {
+            Loading()
+        }
+
+        else if(artistDetails is ArtistDetailsLoadingState.Success)
+        {
+            when(currentTab)
+            {
+                "ArtistInfo"-> ArtistInfo(artistInfo =  artistDetails.artistDetails.artistInfo)
+                "Artworks"-> Artworks(artworklist = artistDetails.artistDetails.artWorks)
+            }
         }
     }
 

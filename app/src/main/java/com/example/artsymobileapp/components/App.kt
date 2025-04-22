@@ -33,8 +33,10 @@ fun App() {
             )
         ) { backStackEntry ->
             ArtistDetails(
-                backStackEntry.arguments?.getString("artistId") ?: "",
-                backStackEntry.arguments?.getString("artistName") ?: ""
+                viewModel = viewModel,
+                artistId = backStackEntry.arguments?.getString("artistId") ?: "",
+                artistName = backStackEntry.arguments?.getString("artistName") ?: "",
+                navController = navController
             )
         }
     }

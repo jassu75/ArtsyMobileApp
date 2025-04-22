@@ -18,6 +18,6 @@ data class ArtworksType(
 
 
 data class ArtistDDetailsType(
-    val artistInfo: List<ArtistInfoType>,
+    val artistInfo: ArtistInfoType,
     val artWorks: List<ArtworksType>
 )

@@ -18,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
-val heading_text=TextStyle(fontSize = 20.sp)
+val heading_text = TextStyle(fontSize = 20.sp)
+
 @Composable
-fun ArtistDetailsBar(artistName: String) {
+fun ArtistDetailsBar(artistName: String, navController: NavController) {
     TopAppBar(
         title = {
             Row(
@@ -29,7 +31,7 @@ fun ArtistDetailsBar(artistName: String) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.navigateUp() }) {
                     Icon(
                         Icons.Default.ArrowBack, contentDescription = "Back Arrow"
                     )

@@ -10,7 +10,7 @@ sealed interface ArtistListLoadingState {
 }
 
 sealed interface ArtistDetailsLoadingState {
-    data class Success(val artistDetails: List<ArtistDDetailsType>) : ArtistDetailsLoadingState
+    data class Success(val artistDetails: ArtistDDetailsType) : ArtistDetailsLoadingState
     object Error : ArtistDetailsLoadingState
     object Loading : ArtistDetailsLoadingState
 }
