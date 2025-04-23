@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.artsymobileapp.components.ArtistDetails.Artworks.ArtworksList
@@ -28,7 +28,7 @@ fun ArtistDetailsTabs(
 ) {
 
     val tabs = listOf("ArtistInfo", "Artworks")
-    var currentTab by remember { mutableStateOf("ArtistInfo") }
+    var currentTab by rememberSaveable  { mutableStateOf("ArtistInfo") }
 
     Column(modifier = icon_container) {
         TabRow(selectedTabIndex = tabs.indexOf(currentTab)) {

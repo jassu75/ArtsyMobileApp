@@ -10,6 +10,8 @@ import androidx.navigation.navArgument
 import com.example.artsymobileapp.components.screens.Homepage
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.screens.ArtistDetails
+import com.example.artsymobileapp.components.screens.Login
+import com.example.artsymobileapp.components.screens.Register
 import com.example.artsymobileapp.components.screens.screens
 
 @Composable
@@ -38,6 +40,18 @@ fun App() {
                 artistName = backStackEntry.arguments?.getString("artistName") ?: "",
                 navController = navController
             )
+        }
+
+        composable(
+            route= screens.Login.name
+        ){
+            Login(navController = navController)
+        }
+
+        composable(
+            route= screens.Register.name
+        ){
+            Register(navController = navController)
         }
     }
 }

@@ -46,7 +46,7 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
             isSearching = isSearching,
             viewModel = viewModel,
             setIsSearching = { isSearching = it },
-            navController=navController
+            navController = navController
         )
     } else {
         Scaffold(
@@ -66,7 +66,7 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
                 }
 
                 Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    Button(onClick = {}) {
+                    Button(onClick = { navController.navigate(route = screens.Login.name) }) {
                         Text("Log in to see Favorites")
                     }
                 }
