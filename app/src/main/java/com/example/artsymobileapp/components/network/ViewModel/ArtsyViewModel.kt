@@ -147,7 +147,8 @@ class ArtsyViewModel : ViewModel() {
         userLoginData: loginUserType,
         setLoading: (Boolean) -> Unit,
         context: Context,
-        navController: NavController
+        navController: NavController,
+        setLoginError: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -159,8 +160,12 @@ class ArtsyViewModel : ViewModel() {
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Login Error", "Error logging in")
+                setLoginError(true)
                 writeAuthenticated(context = context, value = false)
                 writeUser(context = context, value = null)
+            }
+            finally {
+                setLoading(false)
             }
         }
 

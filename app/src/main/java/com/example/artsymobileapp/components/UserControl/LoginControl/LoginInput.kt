@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,8 @@ val login_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
 val login_items = Modifier.fillMaxWidth()
+val loader = Modifier.width(30.dp)
+
 
 @Composable
 fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
@@ -42,6 +47,8 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
     var passwordError by rememberSaveable { mutableStateOf(false) }
     var passwordFirstFocus by rememberSaveable { mutableStateOf(false) }
     val passwordErrorText by rememberSaveable { mutableStateOf("Password cannot be empty") }
+
+    var loginError by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
     var loading by rememberSaveable { mutableStateOf(false) }
@@ -61,6 +68,9 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                             emailError = true
                         } else {
                             emailError = false
+                        }
+                        if (loginError) {
+                            loginError = false
                         }
                     },
                     label = { Text(text = "Enter email") },
@@ -87,6 +97,9 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                         } else {
                             passwordError = false
                         }
+                        if (loginError) {
+                            loginError = false
+                        }
                     },
                     label = { Text(text = "Enter password") },
                     placeholder = { Text(text = "Enter password") },
@@ -103,33 +116,46 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                 }
             }
 
-            Button(
-                modifier = login_items,
-                enabled = !(emailError && passwordError),
-                onClick = {
-                    val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+            Column() {
+                Button(
+                    modifier = login_items,
+                    enabled = !loading,
+                    onClick = {
+                        val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
 
-                    if (!emailRegex.matches(email)) {
-                        emailErrorText = "Invalid email format"
-                        emailError = true
-                    } else {
-                        val userLoginData = loginUserType(
-                            email = email,
-                            password = password
-                        )
-                        viewModel.loginUser(
-                            context = context,
-                            setLoading = { loading = it },
-                            userLoginData = userLoginData,
-                            navController=navController
-                        )
+                        if (!emailRegex.matches(email)) {
+                            emailErrorText = "Invalid email format"
+                            emailError = true
+                        } else {
+                            val userLoginData = loginUserType(
+                                email = email,
+                                password = password
+                            )
+                            viewModel.loginUser(
+                                context = context,
+                                setLoading = { loading = it },
+                                userLoginData = userLoginData,
+                                navController = navController,
+                                setLoginError = { loginError = it }
+                            )
 
+                        }
                     }
-                }
-            ) {
-                Text(text = "Login")
-            }
+                ) {
+                    if (loading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                        )
+                    } else {
+                        Text(text = "Login")
+                    }
 
+                }
+
+                if (loginError) {
+                    Text(text = "Username or password is incorrect", color = Color.Red)
+                }
+            }
             Text(
                 text = DirectToRegisterText(navController = navController),
             )
