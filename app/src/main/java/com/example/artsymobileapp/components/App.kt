@@ -45,7 +45,7 @@ fun App() {
         composable(
             route= screens.Login.name
         ){
-            Login(navController = navController)
+            Login(navController = navController,viewModel=viewModel)
         }
 
         composable(

@@ -1,5 +1,6 @@
 package com.example.artsymobileapp.components.UserControl.LoginControl
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +17,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
+import com.example.artsymobileapp.components.network.types.userType.loginUserType
 
 val login_container = Modifier
     .fillMaxSize()
@@ -26,10 +32,19 @@ val login_container = Modifier
 val login_items = Modifier.fillMaxWidth()
 
 @Composable
-fun LoginInput(navController: NavController) {
-    var fullName by rememberSaveable { mutableStateOf("") }
+fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
     var email by rememberSaveable { mutableStateOf("") }
+    var emailError by rememberSaveable { mutableStateOf(false) }
+    var emailFirstFocus by rememberSaveable { mutableStateOf(false) }
+    var emailErrorText by rememberSaveable { mutableStateOf("Email cannot be empty") }
+
     var password by rememberSaveable { mutableStateOf("") }
+    var passwordError by rememberSaveable { mutableStateOf(false) }
+    var passwordFirstFocus by rememberSaveable { mutableStateOf(false) }
+    val passwordErrorText by rememberSaveable { mutableStateOf("Password cannot be empty") }
+
+    val context = LocalContext.current
+    var loading by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = login_container, contentAlignment = Alignment.Center) {
         Column(
@@ -37,21 +52,81 @@ fun LoginInput(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(text = "Enter email") },
-                placeholder = { Text(text = "Enter email") },
+            Column() {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        if (email.isEmpty()) {
+                            emailError = true
+                        } else {
+                            emailError = false
+                        }
+                    },
+                    label = { Text(text = "Enter email") },
+                    placeholder = { Text(text = "Enter email") },
+                    isError = emailError,
+                    modifier = login_items.onFocusChanged { focusState ->
+                        if (!emailFirstFocus && focusState.isFocused) {
+                            emailFirstFocus = true
+                        }
+
+                    },
+                )
+                if (emailFirstFocus && emailError) {
+                    Text(text = emailErrorText, color = Color.Red)
+                }
+            }
+            Column() {
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        if (password.isEmpty()) {
+                            passwordError = true
+                        } else {
+                            passwordError = false
+                        }
+                    },
+                    label = { Text(text = "Enter password") },
+                    placeholder = { Text(text = "Enter password") },
+                    modifier = login_items.onFocusChanged { focusState ->
+                        if (!passwordFirstFocus && focusState.isFocused) {
+                            passwordFirstFocus = true
+                        }
+
+
+                    },
+                )
+                if (passwordFirstFocus && passwordError) {
+                    Text(text = passwordErrorText, color = Color.Red)
+                }
+            }
+
+            Button(
                 modifier = login_items,
-            )
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(text = "Enter password") },
-                placeholder = { Text(text = "Enter password") },
-                modifier = login_items,
-            )
-            Button(modifier = login_items, onClick = {}) {
+                enabled = !(emailError && passwordError),
+                onClick = {
+                    val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+
+                    if (!emailRegex.matches(email)) {
+                        emailErrorText = "Invalid email format"
+                        emailError = true
+                    } else {
+                        val userLoginData = loginUserType(
+                            email = email,
+                            password = password
+                        )
+                        viewModel.loginUser(
+                            context = context,
+                            setLoading = { loading = it },
+                            userLoginData = userLoginData,
+                            navController=navController
+                        )
+
+                    }
+                }
+            ) {
                 Text(text = "Login")
             }
 

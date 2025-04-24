@@ -1,22 +1,28 @@
-
-
 package com.example.artsymobileapp.components.network
 
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDetailsJson
 import com.example.artsymobileapp.components.network.types.artistlisttype.ArtistListJson
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryJson
+import com.example.artsymobileapp.components.network.types.userType.loginUserType
+import com.example.artsymobileapp.components.network.types.userType.userLoginJson
+import okhttp3.OkHttpClient
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 private const val BASE_URL =
     "https://tejas-artsymobileapp.wl.r.appspot.com"
 
+private val okHttp = OkHttpClient.Builder().cookieJar(ArtsyCookieJar()).build()
+
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .baseUrl(BASE_URL)
+    .client(okHttp)
     .build()
 
 interface ArtsyApiService {
@@ -24,10 +30,13 @@ interface ArtsyApiService {
     suspend fun getArtistList(@Path("artistName") artistName: String): ArtistListJson
 
     @GET("/api/artistdetails/{artistId}")
-    suspend fun getArtistDetails(@Path("artistId") artistId:String): ArtistDetailsJson
+    suspend fun getArtistDetails(@Path("artistId") artistId: String): ArtistDetailsJson
 
     @GET("/api/category/{artworkId}")
-    suspend fun getCategory(@Path("artworkId") artworkId:String): CategoryJson
+    suspend fun getCategory(@Path("artworkId") artworkId: String): CategoryJson
+
+    @POST("/api/db/login")
+    suspend fun loginUser(@Body loginUserData:loginUserType):userLoginJson
 }
 
 object ArtsyAPI {

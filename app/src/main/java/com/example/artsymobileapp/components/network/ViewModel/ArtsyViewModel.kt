@@ -1,12 +1,16 @@
 package com.example.artsymobileapp.components.network.ViewModel
 
 import ArtistListType
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.example.artsymobileapp.components.SharedPreferences.writeAuthenticated
+import com.example.artsymobileapp.components.SharedPreferences.writeUser
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ArtsyAPI
@@ -15,6 +19,8 @@ import com.example.artsymobileapp.components.network.types.artistDetailsType.Art
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
+import com.example.artsymobileapp.components.network.types.userType.loginUserType
+import com.example.artsymobileapp.components.screens.screens
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -100,7 +106,6 @@ class ArtsyViewModel : ViewModel() {
                 artistDetailsUIState = ArtistDetailsLoadingState.Success(refinedArtistDetails)
 
 
-
             } catch (e: Exception) {
                 Log.e("FETCH ARTIST DETAILS", "Error occured fetching artist details", e)
                 artistListUiState = ArtistListLoadingState.Error
@@ -116,19 +121,18 @@ class ArtsyViewModel : ViewModel() {
                 categoryUIState = CategoryLoadingState.Loading
                 val categoryList = ArtsyAPI.retrofitService.getCategory(artworkId)
 
-               val refinedCategory=categoryList._embedded.genes.map { category->
-                   CategoryType(
-                       id = category.id,
-                       title = category.name,
-                       image = category._links.thumbnail.href,
-                       description = category.description
-                   )
-               }
+                val refinedCategory = categoryList._embedded.genes.map { category ->
+                    CategoryType(
+                        id = category.id,
+                        title = category.name,
+                        image = category._links.thumbnail.href,
+                        description = category.description
+                    )
+                }
 
 
 
                 categoryUIState = CategoryLoadingState.Success(refinedCategory)
-
 
 
             } catch (e: Exception) {
@@ -137,5 +141,28 @@ class ArtsyViewModel : ViewModel() {
             }
 
         }
+    }
+
+    fun loginUser(
+        userLoginData: loginUserType,
+        setLoading: (Boolean) -> Unit,
+        context: Context,
+        navController: NavController
+    ) {
+        viewModelScope.launch {
+            try {
+
+                setLoading(true)
+                val user = ArtsyAPI.retrofitService.loginUser(userLoginData)
+                writeAuthenticated(context = context, value = true)
+                writeUser(context = context, value = user.user)
+                navController.navigate(route = screens.Homepage.name)
+            } catch (e: Exception) {
+                Log.e("Login Error", "Error logging in")
+                writeAuthenticated(context = context, value = false)
+                writeUser(context = context, value = null)
+            }
+        }
+
     }
 }

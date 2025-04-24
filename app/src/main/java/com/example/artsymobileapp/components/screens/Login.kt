@@ -10,10 +10,11 @@ import androidx.navigation.NavController
 
 import com.example.artsymobileapp.components.Topbar.LoginTopBar
 import com.example.artsymobileapp.components.UserControl.LoginControl.LoginInput
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 
 @Composable
-fun Login(navController: NavController) {
+fun Login(navController: NavController,viewModel: ArtsyViewModel) {
 
     Scaffold(
         topBar = { LoginTopBar(navController=navController) }
@@ -22,7 +23,7 @@ fun Login(navController: NavController) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-                LoginInput(navController=navController)
+                LoginInput(navController=navController,viewModel=viewModel)
         }
     }
 }
