@@ -1,6 +1,5 @@
 package com.example.artsymobileapp.components.UserControl.RegisterControl
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,20 +17,42 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
+import com.example.artsymobileapp.components.network.types.userType.registerUserType
 
 val register_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
 val register_items = Modifier.fillMaxWidth()
 
+
 @Composable
-fun RegisterInput(navController: NavController) {
-    var fullName by rememberSaveable { mutableStateOf("") }
+fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
+
+    var fullname by rememberSaveable { mutableStateOf("") }
+    var fullnameError by rememberSaveable { mutableStateOf(false) }
+    var fullnameFirstFocus by rememberSaveable { mutableStateOf(false) }
+    val fullnameErrorText by rememberSaveable { mutableStateOf("Fullname cannot be empty") }
+
     var email by rememberSaveable { mutableStateOf("") }
+    var emailError by rememberSaveable { mutableStateOf(false) }
+    var emailFirstFocus by rememberSaveable { mutableStateOf(false) }
+    var emailErrorText by rememberSaveable { mutableStateOf("Email cannot be empty") }
+
     var password by rememberSaveable { mutableStateOf("") }
+    var passwordError by rememberSaveable { mutableStateOf(false) }
+    var passwordFirstFocus by rememberSaveable { mutableStateOf(false) }
+    val passwordErrorText by rememberSaveable { mutableStateOf("Password cannot be empty") }
+
+    var registerError by rememberSaveable { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    var loading by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = register_container, contentAlignment = Alignment.Center) {
         Column(
@@ -38,29 +60,128 @@ fun RegisterInput(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = fullName,
-                onValueChange = { fullName = it },
-                label = { Text(text = "Enter full name") },
-                placeholder = { Text(text = "Enter full name") },
+
+            Column() {
+                OutlinedTextField(
+                    value = fullname,
+                    isError = fullnameError,
+                    onValueChange = {
+                        fullname = it
+                        if (fullname.isEmpty()) {
+                            fullnameError = true
+                        } else {
+                            fullnameError = false
+                        }
+                    },
+                    label = { Text(text = "Enter fullname") },
+                    placeholder = { Text(text = "Enter fullname") },
+                    modifier = register_items.onFocusChanged { focusState ->
+                        if (!fullnameFirstFocus && focusState.isFocused) {
+                            fullnameFirstFocus = true
+                        }
+
+
+                    },
+                )
+                if (fullnameFirstFocus && fullnameError) {
+                    Text(text = fullnameErrorText, color = Color.Red)
+                }
+            }
+
+            Column() {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        if (email.isEmpty()) {
+                            emailError = true
+                            emailErrorText="Email cannot be empty"
+                        } else {
+                            emailError = false
+                        }
+                        if (registerError) {
+                            registerError = false
+                        }
+                    },
+                    label = { Text(text = "Enter email") },
+                    placeholder = { Text(text = "Enter email") },
+                    isError = emailError,
+                    modifier = register_items.onFocusChanged { focusState ->
+                        if (!emailFirstFocus && focusState.isFocused) {
+                            emailFirstFocus = true
+                        }
+
+                    },
+                )
+                if (emailFirstFocus && emailError) {
+                    Text(text = emailErrorText, color = Color.Red)
+                }
+                else if(registerError)
+                {
+                    Text(text = "Email already exists", color = Color.Red)
+                }
+            }
+            Column() {
+                OutlinedTextField(
+                    value = password,
+                    isError = passwordError,
+                    onValueChange = {
+                        password = it
+                        if (password.isEmpty()) {
+                            passwordError = true
+                        } else {
+                            passwordError = false
+                        }
+                    },
+                    label = { Text(text = "Enter password") },
+                    placeholder = { Text(text = "Enter password") },
+                    modifier = register_items.onFocusChanged { focusState ->
+                        if (!passwordFirstFocus && focusState.isFocused) {
+                            passwordFirstFocus = true
+                        }
+
+
+                    },
+                )
+                if (passwordFirstFocus && passwordError) {
+                    Text(text = passwordErrorText, color = Color.Red)
+                }
+            }
+
+            Button(
                 modifier = register_items,
-            )
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(text = "Enter email") },
-                placeholder = { Text(text = "Enter email") },
-                modifier = register_items,
-            )
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(text = "Enter password") },
-                placeholder = { Text(text = "Enter password") },
-                modifier = register_items,
-            )
-            Button(modifier = register_items, onClick = {}) {
-                Text(text = "Register")
+                enabled = !loading,
+                onClick = {
+                    val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+
+                    if (!emailRegex.matches(email)) {
+                        emailErrorText = "Invalid email format"
+                        emailError = true
+                    } else {
+                        val userRegisterData = registerUserType(
+                            fullname = fullname,
+                            email = email,
+                            password = password
+                        )
+                        viewModel.registerUser(
+                            context = context,
+                            setLoading = { loading = it },
+                            userRegisterData = userRegisterData,
+                            navController = navController,
+                            setRegisterError = { registerError = it }
+                        )
+
+                    }
+                }
+            ) {
+                if (loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                    )
+                } else {
+                    Text(text = "Register")
+                }
+
             }
 
             Text(

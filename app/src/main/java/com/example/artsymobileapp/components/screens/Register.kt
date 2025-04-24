@@ -6,15 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavController
 
 import com.example.artsymobileapp.components.Topbar.RegisterTopBar
 import com.example.artsymobileapp.components.UserControl.RegisterControl.RegisterInput
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 
 @Composable
-fun Register(navController: NavController) {
+fun Register(navController: NavController,viewModel: ArtsyViewModel) {
 
     Scaffold(
         topBar = { RegisterTopBar(navController=navController) }
@@ -23,7 +25,7 @@ fun Register(navController: NavController) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            RegisterInput(navController=navController)
+            RegisterInput(viewModel = viewModel, navController=navController)
         }
     }
 }

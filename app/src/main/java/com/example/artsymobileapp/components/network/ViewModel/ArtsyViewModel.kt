@@ -20,6 +20,7 @@ import com.example.artsymobileapp.components.network.types.artistDetailsType.Art
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
+import com.example.artsymobileapp.components.network.types.userType.registerUserType
 import com.example.artsymobileapp.components.screens.screens
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
@@ -161,6 +162,33 @@ class ArtsyViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("Login Error", "Error logging in")
                 setLoginError(true)
+                writeAuthenticated(context = context, value = false)
+                writeUser(context = context, value = null)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+    }
+
+    fun registerUser(
+        userRegisterData: registerUserType,
+        setLoading: (Boolean) -> Unit,
+        context: Context,
+        navController: NavController,
+        setRegisterError: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+
+                setLoading(true)
+                val user = ArtsyAPI.retrofitService.registerUser(userRegisterData)
+                writeAuthenticated(context = context, value = true)
+                writeUser(context = context, value = user.user)
+                navController.navigate(route = screens.Homepage.name)
+            } catch (e: Exception) {
+                Log.e("Register Error", "Error Registering User")
+                setRegisterError(true)
                 writeAuthenticated(context = context, value = false)
                 writeUser(context = context, value = null)
             }

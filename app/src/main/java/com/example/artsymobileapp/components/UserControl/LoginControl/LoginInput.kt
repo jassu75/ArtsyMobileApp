@@ -33,7 +33,6 @@ val login_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
 val login_items = Modifier.fillMaxWidth()
-val loader = Modifier.width(30.dp)
 
 
 @Composable
@@ -66,6 +65,7 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                         email = it
                         if (email.isEmpty()) {
                             emailError = true
+                            emailErrorText = "Email cannot be empty"
                         } else {
                             emailError = false
                         }

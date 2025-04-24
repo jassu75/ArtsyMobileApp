@@ -4,7 +4,8 @@ import com.example.artsymobileapp.components.network.types.artistDetailsType.Art
 import com.example.artsymobileapp.components.network.types.artistlisttype.ArtistListJson
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryJson
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
-import com.example.artsymobileapp.components.network.types.userType.userLoginJson
+import com.example.artsymobileapp.components.network.types.userType.registerUserType
+import com.example.artsymobileapp.components.network.types.userType.userJson
 import okhttp3.OkHttpClient
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
@@ -36,7 +37,10 @@ interface ArtsyApiService {
     suspend fun getCategory(@Path("artworkId") artworkId: String): CategoryJson
 
     @POST("/api/db/login")
-    suspend fun loginUser(@Body loginUserData:loginUserType):userLoginJson
+    suspend fun loginUser(@Body loginUserData:loginUserType):userJson
+
+    @POST("/api/db/register")
+    suspend fun registerUser(@Body registerUserData:registerUserType):userJson
 }
 
 object ArtsyAPI {

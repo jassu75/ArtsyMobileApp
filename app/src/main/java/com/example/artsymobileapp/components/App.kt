@@ -51,7 +51,7 @@ fun App() {
         composable(
             route= screens.Register.name
         ){
-            Register(navController = navController)
+            Register(navController = navController,viewModel=viewModel)
         }
     }
 }
