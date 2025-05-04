@@ -16,8 +16,15 @@ data class ArtworksType(
     val image: String,
 )
 
+data class SimilarArtistListType(
+    val id: String,
+    val title: String,
+    val image: String
+)
+
 
 data class ArtistDDetailsType(
     val artistInfo: ArtistInfoType,
-    val artWorks: List<ArtworksType>
+    val artWorks: List<ArtworksType>,
+    val similarArtists: List<SimilarArtistListType>
 )

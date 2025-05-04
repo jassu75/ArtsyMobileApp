@@ -6,8 +6,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistDetails.ArtistDetailsTabs
+import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
 import com.example.artsymobileapp.components.Topbar.ArtistDetailsBar
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
@@ -18,7 +20,6 @@ fun ArtistDetails(
     artistId: String,
     artistName: String
 ) {
-
     LaunchedEffect(artistId) {
         viewModel.getArtistDetails(artistId)
     }
@@ -31,7 +32,7 @@ fun ArtistDetails(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            ArtistDetailsTabs(artistDetails = viewModel.artistDetailsUIState, viewModel = viewModel)
+            ArtistDetailsTabs(artistDetails = viewModel.artistDetailsUIState, viewModel = viewModel,navController=navController)
 
         }
     }

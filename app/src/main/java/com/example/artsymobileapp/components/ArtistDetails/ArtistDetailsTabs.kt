@@ -15,20 +15,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistDetails.Artworks.ArtworksList
+import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
+import com.example.artsymobileapp.R
+import com.example.artsymobileapp.components.ArtistDetails.SimilarArtists.SimilarArtistList
+
 
 val icon_container = Modifier.fillMaxWidth()
 
 @Composable
 fun ArtistDetailsTabs(
     artistDetails: ArtistDetailsLoadingState,
-    viewModel: ArtsyViewModel
+    viewModel: ArtsyViewModel,
+    navController: NavController
 ) {
 
-    val tabs = listOf("ArtistInfo", "Artworks")
-    var currentTab by rememberSaveable  { mutableStateOf("ArtistInfo") }
+    var currentTab by rememberSaveable { mutableStateOf("ArtistInfo") }
+    val context = LocalContext.current
+    val authenticated = readAuthenticated(context = context)
+    val tabs = if (authenticated) {
+        listOf("ArtistInfo", "Artworks", "SimilarArtists")
+    } else {
+        listOf("ArtistInfo", "Artworks")
+    }
+
 
     Column(modifier = icon_container) {
         TabRow(selectedTabIndex = tabs.indexOf(currentTab)) {
@@ -46,6 +61,11 @@ fun ArtistDetailsTabs(
 
                             "Artworks" -> Icon(
                                 Icons.Default.AccountBox, contentDescription = "Artworks"
+                            )
+
+                            "SimilarArtists" -> Icon(
+                                painter = painterResource(id = R.drawable.person_search),
+                                contentDescription = "Similar artists"
                             )
                         }
                     }
@@ -66,6 +86,11 @@ fun ArtistDetailsTabs(
                 "Artworks" -> ArtworksList(
                     artworklist = artistDetails.artistDetails.artWorks,
                     viewModel = viewModel
+                )
+
+                "SimilarArtists" -> SimilarArtistList(
+                    similarArtistList = artistDetails.artistDetails.similarArtists,
+                    navController = navController
                 )
             }
         }

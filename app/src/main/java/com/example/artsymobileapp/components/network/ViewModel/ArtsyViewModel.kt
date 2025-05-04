@@ -20,6 +20,7 @@ import com.example.artsymobileapp.components.network.types.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
+import com.example.artsymobileapp.components.network.types.artistDetailsType.SimilarArtistListType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
 import com.example.artsymobileapp.components.network.types.userType.registerUserType
@@ -41,6 +42,7 @@ class ArtsyViewModel : ViewModel() {
 
     var categoryUIState: CategoryLoadingState by mutableStateOf(CategoryLoadingState.Loading)
         private set
+
 
     fun getArtistList(artistName: String) {
         searchJob?.cancel()
@@ -101,9 +103,18 @@ class ArtsyViewModel : ViewModel() {
                     )
                 }
 
+                val refinedSimilarArtists = artistDetails.similarArtistList.map { similarArtist ->
+                    SimilarArtistListType(
+                        id = similarArtist.id,
+                        title = similarArtist.name,
+                        image = similarArtist._links.thumbnail.href
+                    )
+                }
+
                 val refinedArtistDetails = ArtistDDetailsType(
                     artistInfo = refinedArtistInfo,
-                    artWorks = refinedArtworks
+                    artWorks = refinedArtworks,
+                    similarArtists = refinedSimilarArtists
                 )
 
                 artistDetailsUIState = ArtistDetailsLoadingState.Success(refinedArtistDetails)
@@ -225,4 +236,5 @@ class ArtsyViewModel : ViewModel() {
 
         }
     }
+
 }
