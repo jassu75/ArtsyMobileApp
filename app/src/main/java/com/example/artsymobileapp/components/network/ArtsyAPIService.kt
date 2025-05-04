@@ -1,5 +1,6 @@
 package com.example.artsymobileapp.components.network
 
+import com.example.artsymobileapp.components.network.types.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDetailsJson
 import com.example.artsymobileapp.components.network.types.artistlisttype.ArtistListJson
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryJson
@@ -41,6 +42,12 @@ interface ArtsyApiService {
 
     @POST("/api/db/register")
     suspend fun registerUser(@Body registerUserData:registerUserType):userJson
+
+    @POST("/api/deleteaccount")
+    suspend fun deleteAccount(@Body email:UserEmail):String
+
+    @POST("/api/logout")
+    suspend fun logout():String
 }
 
 object ArtsyAPI {

@@ -9,12 +9,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.artsymobileapp.components.SharedPreferences.clearPreferences
 import com.example.artsymobileapp.components.SharedPreferences.writeAuthenticated
 import com.example.artsymobileapp.components.SharedPreferences.writeUser
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ArtsyAPI
 import com.example.artsymobileapp.components.network.CategoryLoadingState
+import com.example.artsymobileapp.components.network.types.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
@@ -66,7 +68,7 @@ class ArtsyViewModel : ViewModel() {
                     artistListUiState = ArtistListLoadingState.Success(refinedList)
 
                 } catch (e: Exception) {
-                    Log.e("FETCHARTISTLIST", "Error occured fetching artistList", e)
+                    Log.e("FETCHARTISTLIST", "$e")
                     artistListUiState = ArtistListLoadingState.Error
                 }
             } else {
@@ -108,7 +110,7 @@ class ArtsyViewModel : ViewModel() {
 
 
             } catch (e: Exception) {
-                Log.e("FETCH ARTIST DETAILS", "Error occured fetching artist details", e)
+                Log.e("FETCH ARTIST DETAILS", "$e")
                 artistListUiState = ArtistListLoadingState.Error
             }
 
@@ -137,7 +139,7 @@ class ArtsyViewModel : ViewModel() {
 
 
             } catch (e: Exception) {
-                Log.e("FETCH CATEGORY", "Error occured fetching categories", e)
+                Log.e("FETCH CATEGORY", "$e")
                 categoryUIState = CategoryLoadingState.Error
             }
 
@@ -160,7 +162,7 @@ class ArtsyViewModel : ViewModel() {
                 writeUser(context = context, value = user.user)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
-                Log.e("Login Error", "Error logging in")
+                Log.e("Login Error", "$e")
                 setLoginError(true)
                 writeAuthenticated(context = context, value = false)
                 writeUser(context = context, value = null)
@@ -187,15 +189,40 @@ class ArtsyViewModel : ViewModel() {
                 writeUser(context = context, value = user.user)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
-                Log.e("Register Error", "Error Registering User")
+                Log.e("Register Error", "$e")
                 setRegisterError(true)
                 writeAuthenticated(context = context, value = false)
                 writeUser(context = context, value = null)
-            }
-            finally {
+            } finally {
                 setLoading(false)
             }
         }
 
+    }
+
+    fun logout(context: Context, navController: NavController) {
+        viewModelScope.launch {
+            try {
+                ArtsyAPI.retrofitService.logout()
+                clearPreferences(context = context)
+                navController.navigate(route = screens.Homepage.name)
+            } catch (e: Exception) {
+                Log.e("Logout Error", "$e")
+            }
+        }
+    }
+
+    fun deleteAccount(context: Context, navController: NavController, email: String) {
+        viewModelScope.launch {
+            try {
+                val userEmail = UserEmail(email = email)
+                ArtsyAPI.retrofitService.deleteAccount(email = userEmail)
+                clearPreferences(context = context)
+                navController.navigate(route = screens.Homepage.name)
+            } catch (e: Exception) {
+                Log.e("Delete account Error", "$e")
+            }
+
+        }
     }
 }

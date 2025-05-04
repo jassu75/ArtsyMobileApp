@@ -51,7 +51,11 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
     } else {
         Scaffold(
             topBar = {
-                HomepageBar(setIsSearching = { isSearching = it })
+                HomepageBar(
+                    setIsSearching = { isSearching = it },
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
         ) { innerPadding ->
             Column(

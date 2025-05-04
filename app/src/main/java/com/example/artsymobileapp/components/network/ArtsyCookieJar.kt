@@ -20,4 +20,8 @@ class ArtsyCookieJar : CookieJar {
         return artsyCookieJar[url.host] ?: emptyList()
     }
 
+    fun clearCookieJar() {
+        artsyCookieJar.clear()
+    }
+
 }

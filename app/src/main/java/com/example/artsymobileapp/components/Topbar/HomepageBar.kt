@@ -3,7 +3,6 @@
 package com.example.artsymobileapp.components.Topbar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,9 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 @Composable
-fun HomepageBar(setIsSearching: (Boolean) -> Unit) {
+fun HomepageBar(viewModel: ArtsyViewModel,setIsSearching: (Boolean) -> Unit,navController: NavController) {
+
     TopAppBar(
         title = {
 
@@ -30,12 +32,8 @@ fun HomepageBar(setIsSearching: (Boolean) -> Unit) {
                     Icons.Default.Search, contentDescription = "Search"
                 )
             }
-            IconButton(onClick = {}) {
-                Icon(
-                    Icons.Default.Person, contentDescription = "Profile"
-                )
+            Profile(navController=navController,viewModel=viewModel)
 
-            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
