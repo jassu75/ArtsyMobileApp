@@ -15,18 +15,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistDetails.Artworks.ArtworksList
-import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.R
 import com.example.artsymobileapp.components.ArtistDetails.SimilarArtists.SimilarArtistList
 
 
-val icon_container = Modifier.fillMaxWidth()
+private val icon_container = Modifier.fillMaxWidth()
 
 @Composable
 fun ArtistDetailsTabs(
@@ -36,8 +34,7 @@ fun ArtistDetailsTabs(
 ) {
 
     var currentTab by rememberSaveable { mutableStateOf("ArtistInfo") }
-    val context = LocalContext.current
-    val authenticated = readAuthenticated(context = context)
+    val authenticated =viewModel.authenticated.value
     val tabs = if (authenticated) {
         listOf("ArtistInfo", "Artworks", "SimilarArtists")
     } else {

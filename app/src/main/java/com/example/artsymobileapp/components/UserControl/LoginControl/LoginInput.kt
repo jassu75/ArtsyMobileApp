@@ -25,14 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
 
-val login_container = Modifier
+private val login_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
-val login_items = Modifier.fillMaxWidth()
+private val login_items = Modifier.fillMaxWidth()
 
 
 @Composable
@@ -132,7 +131,6 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                                 password = password
                             )
                             viewModel.loginUser(
-                                context = context,
                                 setLoading = { loading = it },
                                 userLoginData = userLoginData,
                                 navController = navController,

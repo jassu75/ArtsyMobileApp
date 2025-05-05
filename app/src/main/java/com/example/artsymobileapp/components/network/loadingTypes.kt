@@ -1,6 +1,7 @@
 package com.example.artsymobileapp.components.network
 
 import ArtistListType
+import com.example.artsymobileapp.components.network.types.FavoritesType.FavoritesType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
 import com.example.artsymobileapp.components.network.types.userType.UserType
@@ -21,4 +22,10 @@ sealed interface CategoryLoadingState {
     data class Success(val category: List<CategoryType>) : CategoryLoadingState
     object Error : CategoryLoadingState
     object Loading : CategoryLoadingState
+}
+
+sealed interface FavoritesLoadingState {
+    data class Success(val favoritesList: FavoritesType) : FavoritesLoadingState
+    object Error : FavoritesLoadingState
+    object Loading : FavoritesLoadingState
 }

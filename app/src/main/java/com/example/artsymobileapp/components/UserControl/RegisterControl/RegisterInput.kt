@@ -25,10 +25,10 @@ import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.userType.registerUserType
 
-val register_container = Modifier
+private val register_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
-val register_items = Modifier.fillMaxWidth()
+private val register_items = Modifier.fillMaxWidth()
 
 
 @Composable
@@ -164,7 +164,6 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                             password = password
                         )
                         viewModel.registerUser(
-                            context = context,
                             setLoading = { loading = it },
                             userRegisterData = userRegisterData,
                             navController = navController,

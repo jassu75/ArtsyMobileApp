@@ -10,15 +10,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistList.ArtistCard
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
-val artistlist_container = Modifier
+private val artistlist_container = Modifier
     .fillMaxWidth()
     .padding(horizontal = 20.dp, vertical = 20.dp)
 
 
 @Composable
-fun Artistlist(artistList: ArtistListLoadingState,navController: NavController) {
-    if ( artistList is ArtistListLoadingState.Success ) {
+fun Artistlist(
+    artistList: ArtistListLoadingState,
+    navController: NavController,
+    viewModel: ArtsyViewModel,
+    favoritesIdList: List<String>
+) {
+    if (artistList is ArtistListLoadingState.Success) {
         LazyColumn(
             modifier = artistlist_container,
             verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -30,7 +36,9 @@ fun Artistlist(artistList: ArtistListLoadingState,navController: NavController) 
                         id = artistInfo.id,
                         title = artistInfo.title,
                         image = artistInfo.image,
-                        navController=navController
+                        navController = navController,
+                        favoritesIdList = favoritesIdList,
+                        viewModel=viewModel
                     )
                 }
             }

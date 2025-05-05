@@ -1,27 +1,27 @@
 package com.example.artsymobileapp.components.network
 
-import okhttp3.Cookie
-import okhttp3.CookieJar
-import okhttp3.HttpUrl
+import android.content.Context
+import com.franmontiel.persistentcookiejar.ClearableCookieJar
+import com.franmontiel.persistentcookiejar.PersistentCookieJar
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 
-class ArtsyCookieJar : CookieJar {
+object ArtsyCookieJar {
 
-    private val artsyCookieJar: MutableMap<String, List<Cookie>> = mutableMapOf()
+    private var cookieJar: ClearableCookieJar? = null
 
-    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        val existingCookies = artsyCookieJar[url.host]?.toMutableList() ?: mutableListOf()
-        existingCookies.removeAll { newCookie -> cookies.any { it.name == newCookie.name } }
-        existingCookies.addAll(cookies)
-        artsyCookieJar[url.host] = existingCookies
-
+    fun get(context: Context): ClearableCookieJar {
+        if (cookieJar == null) {
+            cookieJar = PersistentCookieJar(
+                SetCookieCache(),
+                SharedPrefsCookiePersistor(context)
+            )
+        }
+        return cookieJar as ClearableCookieJar
     }
 
-    override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        return artsyCookieJar[url.host] ?: emptyList()
+    fun clearCookieJar(context: Context) {
+        val cookieJar = get(context)
+        cookieJar.clear()
     }
-
-    fun clearCookieJar() {
-        artsyCookieJar.clear()
-    }
-
 }

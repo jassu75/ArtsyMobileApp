@@ -14,18 +14,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 
 
-val spacing_below_title = Modifier.height(8.dp)
-val spacing_below_nationality = Modifier.height(16.dp)
+private val spacing_below_title = Modifier.height(8.dp)
+private val spacing_below_nationality = Modifier.height(16.dp)
 
-val title_text = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
-val info_text = TextStyle(fontSize = 16.sp)
-val bio_text = TextStyle(fontSize = 16.sp)
+private val title_text = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
+private val info_text = TextStyle(fontSize = 16.sp)
+private val bio_text = TextStyle(fontSize = 16.sp)
 
 
 @Composable
@@ -50,7 +51,8 @@ fun ArtistInfo(artistInfo: ArtistInfoType,viewModel: ArtsyViewModel) {
         Spacer(modifier = spacing_below_nationality)
         Text(
             text = cleanedBio,
-            style = bio_text
+            style = bio_text,
+            textAlign = TextAlign.Justify
         )
 
 

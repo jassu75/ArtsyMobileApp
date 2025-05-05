@@ -1,6 +1,11 @@
 package com.example.artsymobileapp.components.network
 
-import com.example.artsymobileapp.components.network.types.UserEmail
+import android.content.Context
+import com.example.artsymobileapp.components.network.types.CheckAuthType.CheckAuthJson
+import com.example.artsymobileapp.components.network.types.FavoritesType.FavoritesType
+import com.example.artsymobileapp.components.network.types.UpdateFavorites.AddFavoritesType
+import com.example.artsymobileapp.components.network.types.UpdateFavorites.DeleteFavoritesType
+import com.example.artsymobileapp.components.network.types.userType.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDetailsJson
 import com.example.artsymobileapp.components.network.types.artistlisttype.ArtistListJson
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryJson
@@ -18,15 +23,6 @@ import retrofit2.http.Path
 private const val BASE_URL =
     "https://tejas-artsymobileapp.wl.r.appspot.com"
 
-private val okHttp = OkHttpClient.Builder().cookieJar(ArtsyCookieJar()).build()
-
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .client(okHttp)
-    .build()
-
 interface ArtsyApiService {
     @GET("/api/search/{artistName}")
     suspend fun getArtistList(@Path("artistName") artistName: String): ArtistListJson
@@ -38,20 +34,49 @@ interface ArtsyApiService {
     suspend fun getCategory(@Path("artworkId") artworkId: String): CategoryJson
 
     @POST("/api/db/login")
-    suspend fun loginUser(@Body loginUserData:loginUserType):userJson
+    suspend fun loginUser(@Body loginUserData: loginUserType): userJson
 
     @POST("/api/db/register")
-    suspend fun registerUser(@Body registerUserData:registerUserType):userJson
+    suspend fun registerUser(@Body registerUserData: registerUserType): userJson
 
     @POST("/api/deleteaccount")
-    suspend fun deleteAccount(@Body email:UserEmail):String
+    suspend fun deleteAccount(@Body email: UserEmail): String
 
     @POST("/api/logout")
-    suspend fun logout():String
+    suspend fun logout(): String
+
+    @GET("/api/retrievefavoritelist/{email}")
+    suspend fun retrieveFavorites(@Path("email") email: String): FavoritesType
+
+    @POST("/api/adduserfavorite/{artistId}")
+    suspend fun addFavorite(@Path("artistId") artistId: String): AddFavoritesType
+
+    @POST("/api/deleteuserfavorite/{artistId}")
+    suspend fun deleteFavorite(@Path("artistId") artistId: String): DeleteFavoritesType
+
+    @GET("/api/checkAuth")
+    suspend fun checkAuth(): CheckAuthJson
+
 }
 
 object ArtsyAPI {
-    val retrofitService: ArtsyApiService by lazy {
-        retrofit.create(ArtsyApiService::class.java)
+    lateinit var retrofitService: ArtsyApiService
+        private set
+
+    fun init(context: Context) {
+        val okHttp = OkHttpClient.Builder()
+            .cookieJar(ArtsyCookieJar.get(context)).build()
+
+
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .client(okHttp)
+            .build()
+
+        retrofitService =
+            retrofit.create(ArtsyApiService::class.java)
     }
+
+
 }

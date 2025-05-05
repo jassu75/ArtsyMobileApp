@@ -20,12 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
-import com.example.artsymobileapp.components.SharedPreferences.readAuthenticated
-import com.example.artsymobileapp.components.SharedPreferences.readUser
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.screens.screens
 
-val avatar = Modifier.clip(CircleShape)
+private val avatar = Modifier.clip(CircleShape)
 
 fun logOut(context: Context, navController: NavController, viewModel: ArtsyViewModel) {
     viewModel.logout(context = context, navController = navController)
@@ -43,8 +41,8 @@ fun deleteAccount(
 @Composable
 fun Profile(navController: NavController, viewModel: ArtsyViewModel) {
     val context = LocalContext.current
-    val authenticated = readAuthenticated(context = context)
-    val user = readUser(context = context)
+    val authenticated = viewModel.authenticated.value
+    val user = viewModel.user.value
     var expanded by remember { mutableStateOf(false) }
 
     if (authenticated) {

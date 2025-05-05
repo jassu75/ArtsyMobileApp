@@ -87,7 +87,7 @@ fun ArtistSearchBar(
             },
 
             ) {
-            Artistlist(viewModel.artistListUiState,navController=navController)
+            Artistlist(artistList = viewModel.artistListUiState,navController=navController,favoritesIdList=viewModel.favoriteIdsList,viewModel=viewModel)
         }
     }
 }

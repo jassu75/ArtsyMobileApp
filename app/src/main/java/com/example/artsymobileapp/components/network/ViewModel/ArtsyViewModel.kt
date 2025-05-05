@@ -4,24 +4,25 @@ import ArtistListType
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.artsymobileapp.components.SharedPreferences.clearPreferences
-import com.example.artsymobileapp.components.SharedPreferences.writeAuthenticated
-import com.example.artsymobileapp.components.SharedPreferences.writeUser
 import com.example.artsymobileapp.components.network.ArtistDetailsLoadingState
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ArtsyAPI
+import com.example.artsymobileapp.components.network.ArtsyCookieJar
 import com.example.artsymobileapp.components.network.CategoryLoadingState
-import com.example.artsymobileapp.components.network.types.UserEmail
+import com.example.artsymobileapp.components.network.FavoritesLoadingState
+import com.example.artsymobileapp.components.network.types.userType.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtworksType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.SimilarArtistListType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
+import com.example.artsymobileapp.components.network.types.userType.UserType
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
 import com.example.artsymobileapp.components.network.types.userType.registerUserType
 import com.example.artsymobileapp.components.screens.screens
@@ -42,6 +43,30 @@ class ArtsyViewModel : ViewModel() {
 
     var categoryUIState: CategoryLoadingState by mutableStateOf(CategoryLoadingState.Loading)
         private set
+
+    var favoriteIdsList = mutableStateListOf<String>()
+        private set
+
+    var favoritesListUIState: FavoritesLoadingState by mutableStateOf(FavoritesLoadingState.Loading)
+        private set
+
+    var authenticated = mutableStateOf(false)
+        private set
+
+    var user = mutableStateOf<UserType?>(null)
+        private set
+
+    private fun setAuthenticated(value: Boolean) {
+        authenticated.value = value
+    }
+
+    private fun setUser(value: UserType?) {
+        user.value = value
+    }
+
+    init {
+        checkAuth()
+    }
 
 
     fun getArtistList(artistName: String) {
@@ -160,7 +185,6 @@ class ArtsyViewModel : ViewModel() {
     fun loginUser(
         userLoginData: loginUserType,
         setLoading: (Boolean) -> Unit,
-        context: Context,
         navController: NavController,
         setLoginError: (Boolean) -> Unit
     ) {
@@ -169,14 +193,22 @@ class ArtsyViewModel : ViewModel() {
 
                 setLoading(true)
                 val user = ArtsyAPI.retrofitService.loginUser(userLoginData)
-                writeAuthenticated(context = context, value = true)
-                writeUser(context = context, value = user.user)
+
+                val favoriteIdsList = user.favoritesList.map { favorite ->
+                    favorite.artistId
+                }
+
+                setFavoriteIdsList(favoriteIdsList)
+
+                setAuthenticated(value = true)
+                setUser(value = user.user)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Login Error", "$e")
                 setLoginError(true)
-                writeAuthenticated(context = context, value = false)
-                writeUser(context = context, value = null)
+                setAuthenticated(value = false)
+                setUser(value = null)
+
             } finally {
                 setLoading(false)
             }
@@ -187,7 +219,6 @@ class ArtsyViewModel : ViewModel() {
     fun registerUser(
         userRegisterData: registerUserType,
         setLoading: (Boolean) -> Unit,
-        context: Context,
         navController: NavController,
         setRegisterError: (Boolean) -> Unit
     ) {
@@ -196,14 +227,20 @@ class ArtsyViewModel : ViewModel() {
 
                 setLoading(true)
                 val user = ArtsyAPI.retrofitService.registerUser(userRegisterData)
-                writeAuthenticated(context = context, value = true)
-                writeUser(context = context, value = user.user)
+
+                val favoriteIdsList = user.favoritesList.map { favorite ->
+                    favorite.artistId
+                }
+
+                setFavoriteIdsList(favoriteIdsList)
+                setAuthenticated(value = false)
+                setUser(value = user.user)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Register Error", "$e")
                 setRegisterError(true)
-                writeAuthenticated(context = context, value = false)
-                writeUser(context = context, value = null)
+                setAuthenticated(value = false)
+                setUser(value = null)
             } finally {
                 setLoading(false)
             }
@@ -215,7 +252,7 @@ class ArtsyViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 ArtsyAPI.retrofitService.logout()
-                clearPreferences(context = context)
+                ArtsyCookieJar.clearCookieJar(context = context)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Logout Error", "$e")
@@ -228,13 +265,87 @@ class ArtsyViewModel : ViewModel() {
             try {
                 val userEmail = UserEmail(email = email)
                 ArtsyAPI.retrofitService.deleteAccount(email = userEmail)
-                clearPreferences(context = context)
+                ArtsyCookieJar.clearCookieJar(context = context)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Delete account Error", "$e")
             }
 
         }
+    }
+
+    fun addFavoriteId(artistId: String) {
+        viewModelScope.launch {
+            try {
+                if (artistId !in favoriteIdsList) {
+                    favoriteIdsList.add(artistId)
+                    val addFavoriteJson = ArtsyAPI.retrofitService.addFavorite(artistId)
+                    if (addFavoriteJson.favoritesList != null) {
+                        favoritesListUIState =
+                            FavoritesLoadingState.Success(addFavoriteJson.favoritesList)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("---Failed add favorite", "$e")
+            }
+        }
+    }
+
+    fun removeFavoriteId(artistId: String) {
+        viewModelScope.launch {
+            try {
+                if (artistId in favoriteIdsList) {
+                    favoriteIdsList.remove(artistId)
+
+                }
+                val deleteFavoriteJson = ArtsyAPI.retrofitService.deleteFavorite(artistId)
+                if (deleteFavoriteJson.favoritesList != null) {
+                    favoritesListUIState =
+                        FavoritesLoadingState.Success(deleteFavoriteJson.favoritesList)
+                }
+            } catch (e: Exception) {
+                Log.e("Failed delete favorite", "$e")
+
+            }
+        }
+
+
+    }
+
+    fun setFavoriteIdsList(favoriteIds: List<String>) {
+        favoriteIdsList.clear()
+        favoriteIdsList.addAll(favoriteIds)
+    }
+
+    fun retrieveFavorites(email: String) {
+        viewModelScope.launch {
+            try {
+                val favoritesJson = ArtsyAPI.retrofitService.retrieveFavorites(email)
+                favoritesListUIState = FavoritesLoadingState.Success(favoritesJson)
+                val favoriteIdList = favoritesJson.map { favorite -> favorite.artistId }
+                setFavoriteIdsList(favoriteIdList)
+
+
+            } catch (e: Exception) {
+                Log.e("---Fail Favorite fetch", "$e")
+                favoritesListUIState = FavoritesLoadingState.Error
+            }
+        }
+    }
+
+    fun checkAuth() {
+        viewModelScope.launch {
+            try {
+                val checkAuthJson = ArtsyAPI.retrofitService.checkAuth()
+                setAuthenticated(value = true)
+                setUser(value = checkAuthJson.user)
+            } catch (e: Exception) {
+                Log.e("Auth failed", "$e")
+                setAuthenticated(value = false)
+                setUser(value = null)
+            }
+        }
+
     }
 
 }
