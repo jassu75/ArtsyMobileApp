@@ -37,7 +37,7 @@ class ArtsyViewModel : ViewModel() {
 
     private var searchJob: Job? = null
 
-    var isInitialised: StateFlow<Boolean> = MutableStateFlow(false)
+    var isInitialised by mutableStateOf(false)
         private set
 
     var artistListUiState: ArtistListLoadingState by mutableStateOf(ArtistListLoadingState.Loading)
@@ -358,7 +358,7 @@ class ArtsyViewModel : ViewModel() {
                 setUser(value = null)
 
             } finally {
-                (isInitialised as MutableStateFlow).value = true
+                isInitialised = true
 
             }
         }

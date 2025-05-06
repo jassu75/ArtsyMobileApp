@@ -24,13 +24,26 @@ fun ArtistDetails(
 
 
     Scaffold(
-        topBar = { ArtistDetailsBar(artistName = artistName, navController = navController) }
+        topBar = {
+            ArtistDetailsBar(
+                artistName = artistName,
+                navController = navController,
+                viewModel = viewModel,
+                favoritesIdList = viewModel.favoriteIdsList,
+                artistId=artistId
+
+            )
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            ArtistDetailsTabs(artistDetails = viewModel.artistDetailsUIState, viewModel = viewModel,navController=navController)
+            ArtistDetailsTabs(
+                artistDetails = viewModel.artistDetailsUIState,
+                viewModel = viewModel,
+                navController = navController
+            )
 
         }
     }
