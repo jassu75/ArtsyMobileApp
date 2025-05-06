@@ -1,6 +1,8 @@
 package com.example.artsymobileapp.components.screens
 
 import ArtistSearchBar
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,6 +65,8 @@ fun HomepageDate() {
 fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
     val authenticated = viewModel.authenticated.value
+    val context = LocalContext.current
+
 
     if (isSearching) {
         ArtistSearchBar(
@@ -113,7 +118,12 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
 
 
                 Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    TextButton(onClick = {}) {
+                    TextButton(onClick = {
+
+                        val url = Intent(Intent.ACTION_VIEW)
+                        url.data = Uri.parse("https://www.artsy.net/")
+                        context.startActivity(url)
+                    }) {
                         Text("Powered by Artsy")
                     }
                 }

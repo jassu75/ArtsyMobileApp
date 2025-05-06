@@ -19,7 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
@@ -44,6 +47,12 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
     val passwordErrorText by rememberSaveable { mutableStateOf("Password cannot be empty") }
 
     var loginError by rememberSaveable { mutableStateOf(false) }
+
+    val passwordTransformation = VisualTransformation {
+        TransformedText(
+            AnnotatedString("*".repeat(it.text.length)), OffsetMapping.Identity
+        )
+    }
 
     var loading by rememberSaveable { mutableStateOf(false) }
 
@@ -96,6 +105,7 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                             loginError = false
                         }
                     },
+                    visualTransformation = passwordTransformation,
                     label = { Text(text = "Enter password") },
                     placeholder = { Text(text = "Enter password") },
                     modifier = login_items.onFocusChanged { focusState ->

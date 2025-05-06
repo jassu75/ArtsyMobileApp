@@ -20,6 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
@@ -51,7 +55,12 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
 
     var registerError by rememberSaveable { mutableStateOf(false) }
 
-    val context = LocalContext.current
+    val passwordTransformation = VisualTransformation {
+        TransformedText(
+            AnnotatedString("*".repeat(it.text.length)), OffsetMapping.Identity
+        )
+    }
+
     var loading by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = register_container, contentAlignment = Alignment.Center) {
@@ -134,6 +143,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                         }
                     },
                     label = { Text(text = "Enter password") },
+                    visualTransformation = passwordTransformation,
                     placeholder = { Text(text = "Enter password") },
                     modifier = register_items.onFocusChanged { focusState ->
                         if (!passwordFirstFocus && focusState.isFocused) {
