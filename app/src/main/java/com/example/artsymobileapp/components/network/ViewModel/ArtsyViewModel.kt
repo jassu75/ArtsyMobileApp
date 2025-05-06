@@ -233,7 +233,7 @@ class ArtsyViewModel : ViewModel() {
                 }
 
                 setFavoriteIdsList(favoriteIdsList)
-                setAuthenticated(value = false)
+                setAuthenticated(value = true)
                 setUser(value = user.user)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
@@ -253,6 +253,8 @@ class ArtsyViewModel : ViewModel() {
             try {
                 ArtsyAPI.retrofitService.logout()
                 ArtsyCookieJar.clearCookieJar(context = context)
+                setUser(value = null)
+                setAuthenticated(value = false)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Logout Error", "$e")
@@ -266,6 +268,8 @@ class ArtsyViewModel : ViewModel() {
                 val userEmail = UserEmail(email = email)
                 ArtsyAPI.retrofitService.deleteAccount(email = userEmail)
                 ArtsyCookieJar.clearCookieJar(context = context)
+                setUser(value = null)
+                setAuthenticated(value = false)
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Delete account Error", "$e")
