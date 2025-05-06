@@ -1,16 +1,13 @@
 package com.example.artsymobileapp.components.UserControl.LoginControl
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +45,6 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
 
     var loginError by rememberSaveable { mutableStateOf(false) }
 
-    val context = LocalContext.current
     var loading by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = login_container, contentAlignment = Alignment.Center) {

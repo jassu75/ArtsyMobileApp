@@ -4,7 +4,6 @@ import ArtistListType
 import com.example.artsymobileapp.components.network.types.FavoritesType.FavoritesType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
-import com.example.artsymobileapp.components.network.types.userType.UserType
 
 sealed interface ArtistListLoadingState {
     data class Success(val artistList: List<ArtistListType>) : ArtistListLoadingState

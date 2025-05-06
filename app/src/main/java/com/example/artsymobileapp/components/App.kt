@@ -15,8 +15,7 @@ import com.example.artsymobileapp.components.screens.Register
 import com.example.artsymobileapp.components.screens.screens
 
 @Composable
-fun App() {
-    val viewModel: ArtsyViewModel = viewModel()
+fun App(viewModel: ArtsyViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = screens.Homepage.name) {

@@ -29,11 +29,16 @@ import com.example.artsymobileapp.components.screens.screens
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 class ArtsyViewModel : ViewModel() {
 
     private var searchJob: Job? = null
+
+    var isInitialised: StateFlow<Boolean> = MutableStateFlow(false)
+        private set
 
     var artistListUiState: ArtistListLoadingState by mutableStateOf(ArtistListLoadingState.Loading)
         private set
@@ -337,16 +342,24 @@ class ArtsyViewModel : ViewModel() {
         }
     }
 
-    fun checkAuth() {
+    private fun checkAuth() {
         viewModelScope.launch {
             try {
                 val checkAuthJson = ArtsyAPI.retrofitService.checkAuth()
                 setAuthenticated(value = true)
                 setUser(value = checkAuthJson.user)
+                if (user.value != null) {
+                    retrieveFavorites(user.value!!.email)
+                }
+
             } catch (e: Exception) {
                 Log.e("Auth failed", "$e")
                 setAuthenticated(value = false)
                 setUser(value = null)
+
+            } finally {
+                (isInitialised as MutableStateFlow).value = true
+
             }
         }
 

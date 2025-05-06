@@ -18,13 +18,6 @@ fun Favorites(
     navController: NavController,
     favoritesListUIState: FavoritesLoadingState
 ) {
-    val user = viewModel.user.value
-
-    LaunchedEffect(Unit) {
-        if (user != null) {
-            viewModel.retrieveFavorites(user.email)
-        }
-    }
     Box(modifier = favorites_container)
     {
         if (favoritesListUIState is FavoritesLoadingState.Success) {
