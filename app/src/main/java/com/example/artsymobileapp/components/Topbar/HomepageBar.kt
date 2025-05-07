@@ -37,7 +37,6 @@ fun HomepageBar(viewModel: ArtsyViewModel,setIsSearching: (Boolean) -> Unit,navC
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
         ),
     )
 
