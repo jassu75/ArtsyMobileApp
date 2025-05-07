@@ -1,7 +1,12 @@
 package com.example.artsymobileapp.components
 
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,39 +23,56 @@ import com.example.artsymobileapp.components.screens.screens
 fun App(viewModel: ArtsyViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = screens.Homepage.name) {
-        composable(route = screens.Homepage.name) {
-            Homepage(viewModel = viewModel, navController = navController)
-        }
-        composable(
-            route = "${screens.ArtistDetails.name}/{artistId}/{artistName}",
-            arguments = listOf(
-                navArgument(name = "artistId") {
-                    type = NavType.StringType
-                },
-                navArgument(name = "artistName") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            ArtistDetails(
-                viewModel = viewModel,
-                artistId = backStackEntry.arguments?.getString("artistId") ?: "",
-                artistName = backStackEntry.arguments?.getString("artistName") ?: "",
-                navController = navController
-            )
-        }
+    val snackBarHostState = remember { SnackbarHostState() }
 
-        composable(
-            route= screens.Login.name
-        ){
-            Login(navController = navController,viewModel=viewModel)
-        }
-
-        composable(
-            route= screens.Register.name
-        ){
-            Register(navController = navController,viewModel=viewModel)
+    LaunchedEffect(Unit) {
+        viewModel.snackBarMessage.collect { text ->
+            snackBarHostState.showSnackbar(text)
         }
     }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = screens.Homepage.name,
+        ) {
+            composable(route = screens.Homepage.name) {
+                Homepage(viewModel = viewModel, navController = navController)
+            }
+            composable(
+                route = "${screens.ArtistDetails.name}/{artistId}/{artistName}",
+                arguments = listOf(
+                    navArgument(name = "artistId") {
+                        type = NavType.StringType
+                    },
+                    navArgument(name = "artistName") {
+                        type = NavType.StringType
+                    }
+                )
+            ) { backStackEntry ->
+                ArtistDetails(
+                    viewModel = viewModel,
+                    artistId = backStackEntry.arguments?.getString("artistId") ?: "",
+                    artistName = backStackEntry.arguments?.getString("artistName") ?: "",
+                    navController = navController
+                )
+            }
+
+            composable(
+                route = screens.Login.name
+            ) {
+                Login(navController = navController, viewModel = viewModel)
+            }
+
+            composable(
+                route = screens.Register.name
+            ) {
+                Register(navController = navController, viewModel = viewModel)
+            }
+        }
+    }
+
 }

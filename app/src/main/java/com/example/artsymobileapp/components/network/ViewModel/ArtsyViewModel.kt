@@ -29,8 +29,8 @@ import com.example.artsymobileapp.components.screens.screens
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 
 class ArtsyViewModel : ViewModel() {
@@ -69,8 +69,17 @@ class ArtsyViewModel : ViewModel() {
         user.value = value
     }
 
+    private val snackBar = MutableSharedFlow<String>()
+     val snackBarMessage = snackBar.asSharedFlow()
+
     init {
         checkAuth()
+    }
+
+    fun showSnackBar(text: String) {
+        viewModelScope.launch {
+            snackBar.emit(text)
+        }
     }
 
 
@@ -207,6 +216,7 @@ class ArtsyViewModel : ViewModel() {
 
                 setAuthenticated(value = true)
                 setUser(value = user.user)
+                showSnackBar("Logged in successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Login Error", "$e")
@@ -240,6 +250,7 @@ class ArtsyViewModel : ViewModel() {
                 setFavoriteIdsList(favoriteIdsList)
                 setAuthenticated(value = true)
                 setUser(value = user.user)
+                showSnackBar("Registered successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Register Error", "$e")
@@ -260,6 +271,8 @@ class ArtsyViewModel : ViewModel() {
                 ArtsyCookieJar.clearCookieJar(context = context)
                 setUser(value = null)
                 setAuthenticated(value = false)
+                showSnackBar("Logged out successfully")
+
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Logout Error", "$e")
@@ -275,6 +288,7 @@ class ArtsyViewModel : ViewModel() {
                 ArtsyCookieJar.clearCookieJar(context = context)
                 setUser(value = null)
                 setAuthenticated(value = false)
+                showSnackBar("Deleted user successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
                 Log.e("Delete account Error", "$e")
@@ -292,6 +306,8 @@ class ArtsyViewModel : ViewModel() {
                     if (addFavoriteJson.favoritesList != null) {
                         favoritesListUIState =
                             FavoritesLoadingState.Success(addFavoriteJson.favoritesList)
+                        showSnackBar("Added to Favorites")
+
                     }
                 }
             } catch (e: Exception) {
@@ -311,6 +327,8 @@ class ArtsyViewModel : ViewModel() {
                 if (deleteFavoriteJson.favoritesList != null) {
                     favoritesListUIState =
                         FavoritesLoadingState.Success(deleteFavoriteJson.favoritesList)
+                    showSnackBar("Removed from favorites")
+
                 }
             } catch (e: Exception) {
                 Log.e("Failed delete favorite", "$e")
