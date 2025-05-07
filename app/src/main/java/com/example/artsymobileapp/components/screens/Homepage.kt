@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,7 +21,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +37,6 @@ import java.util.Locale
 
 private val favorites_container = Modifier
     .fillMaxWidth()
-    .background(color = Color(0xFFF2F2F2))
     .padding(vertical = 8.dp)
 
 private val favorites_text = TextStyle(
@@ -94,7 +93,10 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
             ) {
 
                 HomepageDate()
-                Box(modifier = favorites_container, contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = favorites_container.background(color = MaterialTheme.colorScheme.tertiaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text("Favorites", style = favorites_text)
                 }
 

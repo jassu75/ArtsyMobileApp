@@ -160,9 +160,7 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                     Text(text = "Username or password is incorrect", color = Color.Red)
                 }
             }
-            Text(
-                text = DirectToRegisterText(navController = navController),
-            )
+            DirectToRegisterText(navController = navController)
 
         }
     }

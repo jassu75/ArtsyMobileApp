@@ -12,17 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
+    primaryContainer = DarkPrimaryContainer,
+    secondaryContainer = DarkSecondaryContainer,
+    tertiaryContainer = DarkTertiaryContainer,
+
 )
 
 private val LightColorScheme = lightColorScheme(
-
-    )
+    primaryContainer = LightPrimaryContainer,
+    secondaryContainer = LightSecondaryContainer,
+    tertiaryContainer = LightTertiaryContainer,
+)
 
 @Composable
 fun ArtsyMobileAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

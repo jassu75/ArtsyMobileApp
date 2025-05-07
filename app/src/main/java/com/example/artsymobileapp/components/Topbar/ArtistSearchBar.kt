@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.*
@@ -21,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
-val searchbar = Modifier.semantics { isTraversalGroup = true }
-val search_icon = Modifier.padding(top = 8.dp)
-val close_icon = Modifier.padding(top = 8.dp)
+private val searchbar = Modifier.semantics { isTraversalGroup = true }
+private val search_icon = Modifier.padding(top = 8.dp)
+private val close_icon = Modifier.padding(top = 8.dp)
 
 fun fetchArtists(searchText: String, viewModel: ArtsyViewModel) {
     viewModel.getArtistList(searchText)
@@ -85,9 +87,23 @@ fun ArtistSearchBar(
                 searchText = TextFieldValue("")
                 fetchArtists(searchText = "", viewModel = viewModel)
             },
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            )
 
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.secondaryContainer)
             ) {
-            Artistlist(artistList = viewModel.artistListUiState,navController=navController,favoritesIdList=viewModel.favoriteIdsList,viewModel=viewModel)
+                Artistlist(
+                    artistList = viewModel.artistListUiState,
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
+
         }
     }
 }

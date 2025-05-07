@@ -10,16 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.artistDetailsType.SimilarArtistListType
 
-val similar_artistlist_container = Modifier
+private val similar_artistlist_container = Modifier
     .fillMaxWidth()
     .padding(horizontal = 20.dp, vertical = 20.dp)
 
 @Composable
 fun SimilarArtistList(
     similarArtistList: List<SimilarArtistListType>,
-    navController: NavController
+    navController: NavController,
+    viewModel: ArtsyViewModel,
+
 ) {
     if (similarArtistList.isNotEmpty()) {
         LazyColumn(
@@ -33,7 +36,9 @@ fun SimilarArtistList(
                         id = artistInfo.id,
                         title = artistInfo.title,
                         image = artistInfo.image,
-                        navController=navController
+                        navController=navController,
+                        viewModel=viewModel,
+                        favoritesIdList=viewModel.favoriteIdsList,
                     )
                 }
             }

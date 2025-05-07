@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -104,7 +103,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                         email = it
                         if (email.isEmpty()) {
                             emailError = true
-                            emailErrorText="Email cannot be empty"
+                            emailErrorText = "Email cannot be empty"
                         } else {
                             emailError = false
                         }
@@ -124,9 +123,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                 )
                 if (emailFirstFocus && emailError) {
                     Text(text = emailErrorText, color = Color.Red)
-                }
-                else if(registerError)
-                {
+                } else if (registerError) {
                     Text(text = "Email already exists", color = Color.Red)
                 }
             }
@@ -193,9 +190,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
 
             }
 
-            Text(
-                text = DirectToLoginText(navController = navController),
-            )
+            DirectToLoginText(navController = navController)
 
         }
     }

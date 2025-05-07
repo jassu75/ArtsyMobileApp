@@ -22,7 +22,6 @@ fun Artistlist(
     artistList: ArtistListLoadingState,
     navController: NavController,
     viewModel: ArtsyViewModel,
-    favoritesIdList: List<String>
 ) {
     if (artistList is ArtistListLoadingState.Success) {
         LazyColumn(
@@ -37,7 +36,7 @@ fun Artistlist(
                         title = artistInfo.title,
                         image = artistInfo.image,
                         navController = navController,
-                        favoritesIdList = favoritesIdList,
+                        favoritesIdList = viewModel.favoriteIdsList,
                         viewModel=viewModel
                     )
                 }

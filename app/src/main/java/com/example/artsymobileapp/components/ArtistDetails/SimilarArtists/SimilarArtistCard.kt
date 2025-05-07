@@ -13,11 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -27,38 +27,51 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.artsymobileapp.R
+import com.example.artsymobileapp.components.Favorites.FavoritesIcon
+import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.screens.screens
 
-val card_container = Modifier
+private val card_container = Modifier
     .fillMaxWidth()
     .height(200.dp)
 
-val card_content = Modifier.fillMaxSize()
+private val card_content = Modifier.fillMaxSize()
 
-val card_image = Modifier
+private val card_image = Modifier
     .fillMaxSize()
 
-val card_body_container = Modifier
+private val card_body_container = Modifier
     .fillMaxWidth()
     .height(50.dp)
-    .background(Color(0x80BAC7E1))
 
 
-val card_body_content = Modifier
+private val card_body_content = Modifier
     .fillMaxSize()
     .padding(horizontal = 16.dp)
 
-val card_title = TextStyle(
+private val card_title = TextStyle(
     fontSize = 24.sp,
     fontWeight = FontWeight.Bold
 )
 
+private val favorites_container = Modifier.padding(16.dp)
+
 
 @Composable
-fun SimilarArtistCard(id: String, title: String, image: String, navController: NavController) {
+fun SimilarArtistCard(
+    id: String,
+    title: String,
+    image: String,
+    navController: NavController,
+    viewModel: ArtsyViewModel,
+    favoritesIdList: List<String>
+
+) {
     Card(modifier = card_container, onClick = {
         navController.navigate(route = "${screens.ArtistDetails.name}/${id}/${title}")
     }) {
+        val authenticated = viewModel.authenticated.value
+
         Box(modifier = card_content) {
             if (image == "/assets/artsy_logo.svg") {
                 Image(
@@ -76,8 +89,23 @@ fun SimilarArtistCard(id: String, title: String, image: String, navController: N
                 )
             }
 
+            if (authenticated) {
+                Box(
+                    modifier = favorites_container
+                        .align(Alignment.TopEnd)
+                ) {
+                    FavoritesIcon(
+                        artistId = id,
+                        favoritesIdList = favoritesIdList,
+                        viewModel = viewModel
+                    )
+                }
+            }
+
             Box(
-                modifier = card_body_container.align(Alignment.BottomCenter)
+                modifier = card_body_container
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .align(Alignment.BottomCenter)
             ) {
                 Row(
                     modifier = card_body_content,

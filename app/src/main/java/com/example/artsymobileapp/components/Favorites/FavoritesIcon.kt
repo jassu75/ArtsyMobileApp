@@ -6,19 +6,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.R
 
-
-private val favorites_container = Modifier.background(color = Color.LightGray, shape = CircleShape)
 
 fun handleFavoriteIconClick(
     artistId: String,
@@ -48,7 +46,10 @@ fun FavoritesIcon(artistId: String, favoritesIdList: List<String>, viewModel: Ar
                 viewModel = viewModel
             )
         },
-        modifier = favorites_container
+        modifier = Modifier.background(
+            color = MaterialTheme.colorScheme.tertiaryContainer,
+            shape = CircleShape
+        )
     ) {
         if (isFavorite) {
             Icon(imageVector = Icons.Default.Star, contentDescription = "Favorited Icon")

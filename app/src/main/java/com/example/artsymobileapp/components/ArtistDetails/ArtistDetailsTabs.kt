@@ -34,7 +34,7 @@ fun ArtistDetailsTabs(
 ) {
 
     var currentTab by rememberSaveable { mutableStateOf("ArtistInfo") }
-    val authenticated =viewModel.authenticated.value
+    val authenticated = viewModel.authenticated.value
     val tabs = if (authenticated) {
         listOf("ArtistInfo", "Artworks", "SimilarArtists")
     } else {
@@ -87,7 +87,8 @@ fun ArtistDetailsTabs(
 
                 "SimilarArtists" -> SimilarArtistList(
                     similarArtistList = artistDetails.artistDetails.similarArtists,
-                    navController = navController
+                    navController = navController,
+                    viewModel = viewModel
                 )
             }
         }

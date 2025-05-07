@@ -13,13 +13,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +43,6 @@ private val card_image = Modifier
 private val card_body_container = Modifier
     .fillMaxWidth()
     .height(50.dp)
-    .background(Color(0x80BAC7E1))
 
 
 private val card_body_content = Modifier
@@ -69,7 +67,6 @@ fun ArtistCard(
     favoritesIdList: List<String>
 ) {
 
-    val context = LocalContext.current
     val authenticated = viewModel.authenticated.value
 
     Card(modifier = card_container, onClick = {
@@ -106,7 +103,9 @@ fun ArtistCard(
             }
 
             Box(
-                modifier = card_body_container.align(Alignment.BottomCenter)
+                modifier = card_body_container
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .align(Alignment.BottomCenter)
             ) {
                 Row(
                     modifier = card_body_content,
