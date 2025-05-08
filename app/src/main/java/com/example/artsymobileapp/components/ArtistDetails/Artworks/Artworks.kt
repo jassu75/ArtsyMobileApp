@@ -68,7 +68,10 @@ fun Artworks(id: String, image: String, title: String, date: String, viewModel: 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "$title, $date", style = card_title, textAlign = TextAlign.Center)
-                Button(onClick = { showCategories = true }) {
+                Button(onClick = {
+                    showCategories = true
+                    viewModel.clearCategoryList()
+                }) {
                     Text(
                         text = "View Categories",
                     )
