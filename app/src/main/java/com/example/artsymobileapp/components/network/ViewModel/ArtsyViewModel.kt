@@ -16,6 +16,7 @@ import com.example.artsymobileapp.components.network.ArtsyAPI
 import com.example.artsymobileapp.components.network.ArtsyCookieJar
 import com.example.artsymobileapp.components.network.CategoryLoadingState
 import com.example.artsymobileapp.components.network.FavoritesLoadingState
+import com.example.artsymobileapp.components.network.types.FavoritesType.FavoritesType
 import com.example.artsymobileapp.components.network.types.userType.UserEmail
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistDDetailsType
 import com.example.artsymobileapp.components.network.types.artistDetailsType.ArtistInfoType
@@ -67,7 +68,7 @@ class ArtsyViewModel : ViewModel() {
     var searchText = mutableStateOf("")
         private set
 
-    var isSearching= mutableStateOf(false)
+    var isSearching = mutableStateOf(false)
         private set
 
     init {
@@ -78,14 +79,12 @@ class ArtsyViewModel : ViewModel() {
         searchText.value = text
     }
 
-    fun setisSearching(value:Boolean)
-    {
-        isSearching.value=value
+    fun setisSearching(value: Boolean) {
+        isSearching.value = value
     }
 
-    fun clearArtistList()
-    {
-        artistListUiState=ArtistListLoadingState.Success(null)
+    fun clearArtistList() {
+        artistListUiState = ArtistListLoadingState.Success(null)
     }
 
     private fun setAuthenticated(value: Boolean) {
@@ -106,30 +105,30 @@ class ArtsyViewModel : ViewModel() {
     fun getArtistList() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-                delay(400)
-                try {
+            delay(400)
+            try {
 
-                    val artistList = ArtsyAPI.retrofitService.getArtistList(searchText.value)
-                    val refinedList = artistList.map { artistInfo ->
+                val artistList = ArtsyAPI.retrofitService.getArtistList(searchText.value)
+                val refinedList = artistList.map { artistInfo ->
 
-                        val image =
-                            if (artistInfo._links.thumbnail.href == "/assets/shared/missing_image.png")
-                                "/assets/artsy_logo.svg"
-                            else
-                                artistInfo._links.thumbnail.href
+                    val image =
+                        if (artistInfo._links.thumbnail.href == "/assets/shared/missing_image.png")
+                            "/assets/artsy_logo.svg"
+                        else
+                            artistInfo._links.thumbnail.href
 
-                        ArtistListType(
-                            id = artistInfo._links.self.href.split("/").last(),
-                            title = artistInfo.title,
-                            image = image
-                        )
-                    }
-                    artistListUiState = ArtistListLoadingState.Success(refinedList)
-
-                } catch (e: Exception) {
-                    Log.e("FETCHARTISTLIST", "$e")
-                    artistListUiState = ArtistListLoadingState.Error
+                    ArtistListType(
+                        id = artistInfo._links.self.href.split("/").last(),
+                        title = artistInfo.title,
+                        image = image
+                    )
                 }
+                artistListUiState = ArtistListLoadingState.Success(refinedList)
+
+            } catch (e: Exception) {
+                Log.e("FETCHARTISTLIST", "$e")
+                artistListUiState = ArtistListLoadingState.Error
+            }
 
         }
     }
@@ -232,6 +231,7 @@ class ArtsyViewModel : ViewModel() {
 
                 setAuthenticated(value = true)
                 setUser(value = user.user)
+                retrieveFavorites(user.user.email)
                 showSnackBar("Logged in successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
@@ -266,6 +266,7 @@ class ArtsyViewModel : ViewModel() {
                 setFavoriteIdsList(favoriteIdsList)
                 setAuthenticated(value = true)
                 setUser(value = user.user)
+                retrieveFavorites(user.user.email)
                 showSnackBar("Registered successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
@@ -287,6 +288,8 @@ class ArtsyViewModel : ViewModel() {
                 ArtsyCookieJar.clearCookieJar(context = context)
                 setUser(value = null)
                 setAuthenticated(value = false)
+                favoritesListUIState = FavoritesLoadingState.Success(FavoritesType())
+                favoriteIdsList.clear()
                 showSnackBar("Logged out successfully")
 
                 navController.navigate(route = screens.Homepage.name)
@@ -304,6 +307,8 @@ class ArtsyViewModel : ViewModel() {
                 ArtsyCookieJar.clearCookieJar(context = context)
                 setUser(value = null)
                 setAuthenticated(value = false)
+                favoritesListUIState = FavoritesLoadingState.Success(FavoritesType())
+                favoriteIdsList.clear()
                 showSnackBar("Deleted user successfully")
                 navController.navigate(route = screens.Homepage.name)
             } catch (e: Exception) {
