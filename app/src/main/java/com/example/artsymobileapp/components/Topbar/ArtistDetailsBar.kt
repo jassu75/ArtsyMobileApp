@@ -25,7 +25,7 @@ import com.example.artsymobileapp.components.Favorites.FavoritesIcon
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 private val heading_text = TextStyle(fontSize = 20.sp)
-private val topbar_container=Modifier.fillMaxSize()
+private val topbar_container = Modifier.fillMaxSize()
 
 @Composable
 fun ArtistDetailsBar(
@@ -35,6 +35,8 @@ fun ArtistDetailsBar(
     favoritesIdList: List<String>,
     artistId: String
 ) {
+
+    val authenticated = viewModel.authenticated.value
     TopAppBar(
         title = {
             Row(
@@ -56,12 +58,13 @@ fun ArtistDetailsBar(
                     Text(artistName, style = heading_text)
 
                 }
-
-                FavoritesIcon(
-                    viewModel = viewModel,
-                    favoritesIdList = favoritesIdList,
-                    artistId = artistId
-                )
+                if (authenticated) {
+                    FavoritesIcon(
+                        viewModel = viewModel,
+                        favoritesIdList = favoritesIdList,
+                        artistId = artistId
+                    )
+                }
             }
 
         },
