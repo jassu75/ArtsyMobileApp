@@ -47,7 +47,7 @@ fun FavoritesIcon(artistId: String, favoritesIdList: List<String>, viewModel: Ar
             )
         },
         modifier = Modifier.background(
-            color = MaterialTheme.colorScheme.tertiaryContainer,
+            color = MaterialTheme.colorScheme.primaryContainer,
             shape = CircleShape
         )
     ) {

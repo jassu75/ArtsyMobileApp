@@ -14,14 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primaryContainer = DarkPrimaryContainer,
     secondaryContainer = DarkSecondaryContainer,
-    tertiaryContainer = DarkTertiaryContainer,
 
 )
 
 private val LightColorScheme = lightColorScheme(
     primaryContainer = LightPrimaryContainer,
     secondaryContainer = LightSecondaryContainer,
-    tertiaryContainer = LightTertiaryContainer,
 )
 
 @Composable

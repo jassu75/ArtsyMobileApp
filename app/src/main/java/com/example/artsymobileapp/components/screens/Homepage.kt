@@ -94,7 +94,7 @@ fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
 
                 HomepageDate()
                 Box(
-                    modifier = favorites_container.background(color = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = favorites_container.background(color = MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("Favorites", style = favorites_text)

@@ -17,21 +17,26 @@ val artworks_container = Modifier
     .padding(horizontal = 20.dp, vertical = 20.dp)
 
 @Composable
-fun ArtworksList(artworklist: List<ArtworksType>,viewModel: ArtsyViewModel) {
-    LazyColumn(
-        modifier = artworks_container,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        items(artworklist) { artwork ->
-            Box(modifier = Modifier.fillMaxWidth())
-            {
-                Artworks(
-                    id = artwork.id,
-                    title = artwork.title,
-                    image = artwork.image,
-                    date = artwork.date,
-                    viewModel=viewModel
-                )
+fun ArtworksList(artworklist: List<ArtworksType>, viewModel: ArtsyViewModel) {
+
+    if (artworklist.isEmpty()) {
+        EmptyArtworks()
+    } else {
+        LazyColumn(
+            modifier = artworks_container,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            items(artworklist) { artwork ->
+                Box(modifier = Modifier.fillMaxWidth())
+                {
+                    Artworks(
+                        id = artwork.id,
+                        title = artwork.title,
+                        image = artwork.image,
+                        date = artwork.date,
+                        viewModel = viewModel
+                    )
+                }
             }
         }
     }

@@ -21,7 +21,7 @@ fun Favorites(
     {
         if (favoritesListUIState is FavoritesLoadingState.Success) {
             val favoritesList = favoritesListUIState.favoritesList
-            if (favoritesList.size == 0) {
+            if (favoritesList.isEmpty()) {
                 EmptyFavorites()
             } else {
 

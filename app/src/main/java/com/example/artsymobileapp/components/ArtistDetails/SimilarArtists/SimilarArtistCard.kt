@@ -51,7 +51,7 @@ private val card_body_content = Modifier
 
 private val card_title = TextStyle(
     fontSize = 24.sp,
-    fontWeight = FontWeight.Bold
+    fontWeight = FontWeight.Medium
 )
 
 private val favorites_container = Modifier.padding(16.dp)

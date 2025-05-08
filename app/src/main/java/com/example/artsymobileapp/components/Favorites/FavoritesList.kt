@@ -13,19 +13,21 @@ private val favorites_container = Modifier.fillMaxWidth()
 @Composable
 fun FavoritesList(favoritesList: FavoritesType, navController: NavController) {
 
+    val sortedFavoriteList = favoritesList.sortedByDescending { it.createdAt }
 
-        LazyColumn(
-            modifier = favorites_container
-        ) {
-            items(favoritesList) { favorite ->
-                FavoritesCard(
-                    id = favorite.artistId,
-                    title = favorite.artistName,
-                    createdAt = favorite.createdAt,
-                    nationality = favorite.nationality,
-                    birthday = favorite.birthDay,
-                    navController = navController
-                )
+
+    LazyColumn(
+        modifier = favorites_container
+    ) {
+        items(sortedFavoriteList) { favorite ->
+            FavoritesCard(
+                id = favorite.artistId,
+                title = favorite.artistName,
+                createdAt = favorite.createdAt,
+                nationality = favorite.nationality,
+                birthday = favorite.birthDay,
+                navController = navController
+            )
 
 
         }

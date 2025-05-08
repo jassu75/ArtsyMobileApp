@@ -23,8 +23,10 @@ fun SimilarArtistList(
     navController: NavController,
     viewModel: ArtsyViewModel,
 
-) {
-    if (similarArtistList.isNotEmpty()) {
+    ) {
+    if (similarArtistList.isEmpty()) {
+        EmptySimilarArtists()
+    } else {
         LazyColumn(
             modifier = similar_artistlist_container,
             verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -36,15 +38,15 @@ fun SimilarArtistList(
                         id = artistInfo.id,
                         title = artistInfo.title,
                         image = artistInfo.image,
-                        navController=navController,
-                        viewModel=viewModel,
-                        favoritesIdList=viewModel.favoriteIdsList,
+                        navController = navController,
+                        viewModel = viewModel,
+                        favoritesIdList = viewModel.favoriteIdsList,
                     )
                 }
             }
 
         }
-
-
     }
+
+
 }
