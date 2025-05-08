@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 @Composable
-fun HomepageBar(viewModel: ArtsyViewModel,setIsSearching: (Boolean) -> Unit,navController: NavController) {
+fun HomepageBar(viewModel: ArtsyViewModel,navController: NavController) {
 
     TopAppBar(
         title = {
@@ -27,7 +27,7 @@ fun HomepageBar(viewModel: ArtsyViewModel,setIsSearching: (Boolean) -> Unit,navC
         },
         actions = {
 
-            IconButton(onClick = { setIsSearching(true) }) {
+            IconButton(onClick = { viewModel.setisSearching(true)}) {
                 Icon(
                     Icons.Default.Search, contentDescription = "Search"
                 )

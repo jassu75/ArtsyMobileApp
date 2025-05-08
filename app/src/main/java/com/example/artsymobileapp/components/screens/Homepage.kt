@@ -62,24 +62,22 @@ fun HomepageDate() {
 
 @Composable
 fun Homepage(viewModel: ArtsyViewModel, navController: NavController) {
-    var isSearching by rememberSaveable { mutableStateOf(false) }
     val authenticated = viewModel.authenticated.value
     val context = LocalContext.current
 
 
-    if (isSearching) {
+    if (viewModel.isSearching.value) {
         ArtistSearchBar(
-            isSearching = isSearching,
+            isSearching = viewModel.isSearching,
             viewModel = viewModel,
-            setIsSearching = { isSearching = it },
-            navController = navController
+            navController = navController,
+            searchText=viewModel.searchText,
         )
     } else {
 
         Scaffold(
             topBar = {
                 HomepageBar(
-                    setIsSearching = { isSearching = it },
                     navController = navController,
                     viewModel = viewModel
                 )

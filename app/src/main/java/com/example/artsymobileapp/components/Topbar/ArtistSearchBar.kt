@@ -14,11 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
@@ -27,20 +25,14 @@ private val searchbar = Modifier.semantics { isTraversalGroup = true }
 private val search_icon = Modifier.padding(top = 8.dp)
 private val close_icon = Modifier.padding(top = 8.dp)
 
-fun fetchArtists(searchText: String, viewModel: ArtsyViewModel) {
-    viewModel.getArtistList(searchText)
-}
 
 @Composable
 fun ArtistSearchBar(
     viewModel: ArtsyViewModel,
-    isSearching: Boolean,
-    setIsSearching: (Boolean) -> Unit,
-    navController: NavController
+    isSearching: MutableState<Boolean>,
+    navController: NavController,
+    searchText: MutableState<String>
 ) {
-    var searchText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(""))
-    }
 
     Box(
         modifier = Modifier
@@ -51,15 +43,16 @@ fun ArtistSearchBar(
             modifier = searchbar,
             inputField = {
                 SearchBarDefaults.InputField(
-                    query = searchText.text,
+                    query = searchText.value,
                     onQueryChange = { userText ->
-                        searchText = TextFieldValue(userText)
-                        fetchArtists(searchText = userText, viewModel = viewModel)
+                        viewModel.setSearchText(text = userText)
+                        if (searchText.value.length > 3) {
+                            viewModel.getArtistList()
+                        }
                     },
-                    expanded = isSearching,
+                    expanded = isSearching.value,
                     onExpandedChange = {
-                        searchText = TextFieldValue("")
-                        fetchArtists(searchText = "", viewModel = viewModel)
+                  viewModel.setisSearching(it)
                     },
                     onSearch = { },
                     leadingIcon = {
@@ -72,7 +65,9 @@ fun ArtistSearchBar(
                     trailingIcon = {
                         Box(modifier = close_icon) {
                             IconButton(onClick = {
-                                setIsSearching(false)
+                                viewModel.setisSearching(false)
+                                viewModel.clearArtistList()
+                                viewModel.setSearchText(text = "")
                             }) {
                                 Icon(
                                     Icons.Default.Clear, contentDescription = "Close"
@@ -82,10 +77,10 @@ fun ArtistSearchBar(
                     }
                 )
             },
-            expanded = isSearching,
+            expanded = isSearching.value,
             onExpandedChange = {
-                searchText = TextFieldValue("")
-                fetchArtists(searchText = "", viewModel = viewModel)
+                viewModel.setisSearching(it)
+
             },
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,

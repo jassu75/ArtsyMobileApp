@@ -61,19 +61,39 @@ class ArtsyViewModel : ViewModel() {
     var user = mutableStateOf<UserType?>(null)
         private set
 
+    private val snackBar = MutableSharedFlow<String>()
+    val snackBarMessage = snackBar.asSharedFlow()
+
+    var searchText = mutableStateOf("")
+        private set
+
+    var isSearching= mutableStateOf(false)
+        private set
+
+    init {
+        checkAuth()
+    }
+
+    fun setSearchText(text: String) {
+        searchText.value = text
+    }
+
+    fun setisSearching(value:Boolean)
+    {
+        isSearching.value=value
+    }
+
+    fun clearArtistList()
+    {
+        artistListUiState=ArtistListLoadingState.Success(emptyList())
+    }
+
     private fun setAuthenticated(value: Boolean) {
         authenticated.value = value
     }
 
     private fun setUser(value: UserType?) {
         user.value = value
-    }
-
-    private val snackBar = MutableSharedFlow<String>()
-     val snackBarMessage = snackBar.asSharedFlow()
-
-    init {
-        checkAuth()
     }
 
     fun showSnackBar(text: String) {
@@ -83,15 +103,13 @@ class ArtsyViewModel : ViewModel() {
     }
 
 
-    fun getArtistList(artistName: String) {
+    fun getArtistList() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            if (artistName.length > 3) {
                 delay(400)
                 try {
 
-                    artistListUiState = ArtistListLoadingState.Loading
-                    val artistList = ArtsyAPI.retrofitService.getArtistList(artistName)
+                    val artistList = ArtsyAPI.retrofitService.getArtistList(searchText.value)
                     val refinedList = artistList.map { artistInfo ->
 
                         val image =
@@ -112,9 +130,7 @@ class ArtsyViewModel : ViewModel() {
                     Log.e("FETCHARTISTLIST", "$e")
                     artistListUiState = ArtistListLoadingState.Error
                 }
-            } else {
-                artistListUiState = ArtistListLoadingState.Success(emptyList())
-            }
+
         }
     }
 
