@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.ArtistList.ArtistCard
+import com.example.artsymobileapp.components.ArtistList.EmptySearchResults
 import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
@@ -24,26 +25,32 @@ fun Artistlist(
     viewModel: ArtsyViewModel,
 ) {
     if (artistList is ArtistListLoadingState.Success) {
-        LazyColumn(
-            modifier = artistlist_container,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            items(artistList.artistList) { artistInfo ->
-                Box(modifier = Modifier.fillMaxWidth())
-                {
-                    ArtistCard(
-                        id = artistInfo.id,
-                        title = artistInfo.title,
-                        image = artistInfo.image,
-                        navController = navController,
-                        favoritesIdList = viewModel.favoriteIdsList,
-                        viewModel=viewModel
-                    )
+
+        if (artistList.artistList != null) {
+            if (artistList.artistList.isEmpty()) {
+                EmptySearchResults()
+            } else {
+                LazyColumn(
+                    modifier = artistlist_container,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    items(artistList.artistList) { artistInfo ->
+                        Box(modifier = Modifier.fillMaxWidth())
+                        {
+                            ArtistCard(
+                                id = artistInfo.id,
+                                title = artistInfo.title,
+                                image = artistInfo.image,
+                                navController = navController,
+                                favoritesIdList = viewModel.favoriteIdsList,
+                                viewModel = viewModel
+                            )
+                        }
+                    }
+
                 }
+
             }
-
         }
-
-
     }
 }

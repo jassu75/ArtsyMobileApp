@@ -85,7 +85,7 @@ class ArtsyViewModel : ViewModel() {
 
     fun clearArtistList()
     {
-        artistListUiState=ArtistListLoadingState.Success(emptyList())
+        artistListUiState=ArtistListLoadingState.Success(null)
     }
 
     private fun setAuthenticated(value: Boolean) {

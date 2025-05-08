@@ -6,7 +6,7 @@ import com.example.artsymobileapp.components.network.types.artistDetailsType.Art
 import com.example.artsymobileapp.components.network.types.categoryType.CategoryType
 
 sealed interface ArtistListLoadingState {
-    data class Success(val artistList: List<ArtistListType>) : ArtistListLoadingState
+    data class Success(val artistList: List<ArtistListType>?) : ArtistListLoadingState
     object Error : ArtistListLoadingState
     object Loading : ArtistListLoadingState
 }

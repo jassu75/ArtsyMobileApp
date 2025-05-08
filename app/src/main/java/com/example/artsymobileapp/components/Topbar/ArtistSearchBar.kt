@@ -49,6 +49,10 @@ fun ArtistSearchBar(
                         if (searchText.value.length > 3) {
                             viewModel.getArtistList()
                         }
+                        else
+                        {
+                          viewModel.clearArtistList()
+                        }
                     },
                     expanded = isSearching.value,
                     onExpandedChange = {
@@ -87,6 +91,7 @@ fun ArtistSearchBar(
             )
 
         ) {
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
