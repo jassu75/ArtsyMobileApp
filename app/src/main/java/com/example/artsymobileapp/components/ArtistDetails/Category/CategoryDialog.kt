@@ -29,7 +29,7 @@ val dialog_content = Modifier
 
 val cateogry_text = TextStyle(fontSize = 25.sp)
 
-val category_text_container=Modifier.padding(horizontal = 18.dp)
+val category_text_container = Modifier.padding(horizontal = 18.dp)
 
 val button_container = Modifier
     .fillMaxWidth()
@@ -55,7 +55,11 @@ fun CategoryDialog(
                 if (categoryDwtails is CategoryLoadingState.Loading) {
                     Loading()
                 } else if (categoryDwtails is CategoryLoadingState.Success) {
-                    CategoryContent(categoryList = categoryDwtails.category)
+                    if (categoryDwtails.category.isEmpty()) {
+                        EmptyCategories()
+                    } else {
+                        CategoryContent(categoryList = categoryDwtails.category)
+                    }
                 }
 
                 Row(modifier = button_container, horizontalArrangement = Arrangement.End) {
