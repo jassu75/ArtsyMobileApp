@@ -13,17 +13,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 private val searchbar = Modifier.semantics { isTraversalGroup = true }
 private val search_icon = Modifier.padding(top = 8.dp)
 private val close_icon = Modifier.padding(top = 8.dp)
+private val placeholder_text = TextStyle(fontSize = 20.sp)
 
 
 @Composable
@@ -48,15 +53,20 @@ fun ArtistSearchBar(
                         viewModel.setSearchText(text = userText)
                         if (searchText.value.length > 3) {
                             viewModel.getArtistList()
-                        }
-                        else
-                        {
-                          viewModel.clearArtistList()
+                        } else {
+                            viewModel.clearArtistList()
                         }
                     },
                     expanded = isSearching.value,
                     onExpandedChange = {
-                  viewModel.setisSearching(it)
+                        viewModel.setisSearching(it)
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Search artists...",
+                            style = placeholder_text,
+                            textAlign = TextAlign.End
+                        )
                     },
                     onSearch = { },
                     leadingIcon = {
