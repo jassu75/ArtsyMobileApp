@@ -84,7 +84,7 @@ class ArtsyViewModel : ViewModel() {
     }
 
     fun clearCategoryList() {
-        categoryUIState = CategoryLoadingState.Success(emptyList())
+        categoryUIState = CategoryLoadingState.Success(null)
     }
 
     fun clearArtistList() {

@@ -18,7 +18,7 @@ sealed interface ArtistDetailsLoadingState {
 }
 
 sealed interface CategoryLoadingState {
-    data class Success(val category: List<CategoryType>) : CategoryLoadingState
+    data class Success(val category: List<CategoryType>?) : CategoryLoadingState
     object Error : CategoryLoadingState
     object Loading : CategoryLoadingState
 }
