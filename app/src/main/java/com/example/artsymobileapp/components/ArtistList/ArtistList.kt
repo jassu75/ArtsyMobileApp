@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.items
@@ -14,7 +15,7 @@ import com.example.artsymobileapp.components.network.ArtistListLoadingState
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 
 private val artistlist_container = Modifier
-    .fillMaxWidth()
+    .widthIn(max=500.dp)
     .padding(horizontal = 20.dp, vertical = 20.dp)
 
 
@@ -32,7 +33,7 @@ fun Artistlist(
             } else {
                 LazyColumn(
                     modifier = artistlist_container,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
                     items(artistList.artistList) { artistInfo ->
                         Box(modifier = Modifier.fillMaxWidth())

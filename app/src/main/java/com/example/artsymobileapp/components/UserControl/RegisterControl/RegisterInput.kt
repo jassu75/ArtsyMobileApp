@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +33,7 @@ private val register_container = Modifier
     .fillMaxSize()
     .padding(20.dp)
 private val register_items = Modifier.fillMaxWidth()
+private val register_items_container = Modifier.widthIn(max = 600.dp)
 
 
 @Composable
@@ -64,12 +66,12 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
 
     Box(modifier = register_container, contentAlignment = Alignment.Center) {
         Column(
-            modifier = register_items,
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Column() {
+            Column(modifier = register_items_container) {
                 OutlinedTextField(
                     value = fullname,
                     isError = fullnameError,
@@ -96,7 +98,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                 }
             }
 
-            Column() {
+            Column(modifier = register_items_container) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = {
@@ -127,7 +129,7 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                     Text(text = "Email already exists", color = Color.Red)
                 }
             }
-            Column() {
+            Column(modifier = register_items_container) {
                 OutlinedTextField(
                     value = password,
                     isError = passwordError,
@@ -155,40 +157,44 @@ fun RegisterInput(navController: NavController, viewModel: ArtsyViewModel) {
                 }
             }
 
-            Button(
-                modifier = register_items,
-                enabled = !loading,
-                onClick = {
-                    val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+            Column(modifier = register_items_container) {
+                Button(
+                    modifier = register_items,
+                    enabled = !loading,
+                    onClick = {
+                        val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
 
-                    if (!emailRegex.matches(email)) {
-                        emailErrorText = "Invalid email format"
-                        emailError = true
-                    } else {
-                        val userRegisterData = registerUserType(
-                            fullname = fullname,
-                            email = email,
-                            password = password
-                        )
-                        viewModel.registerUser(
-                            setLoading = { loading = it },
-                            userRegisterData = userRegisterData,
-                            navController = navController,
-                            setRegisterError = { registerError = it }
-                        )
+                        if (!emailRegex.matches(email)) {
+                            emailErrorText = "Invalid email format"
+                            emailError = true
+                        } else {
+                            val userRegisterData = registerUserType(
+                                fullname = fullname,
+                                email = email,
+                                password = password
+                            )
+                            viewModel.registerUser(
+                                setLoading = { loading = it },
+                                userRegisterData = userRegisterData,
+                                navController = navController,
+                                setRegisterError = { registerError = it }
+                            )
 
+                        }
                     }
-                }
-            ) {
-                if (loading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                    )
-                } else {
-                    Text(text = "Register")
-                }
+                ) {
+                    if (loading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                        )
+                    } else {
+                        Text(text = "Register")
+                    }
 
+                }
             }
+
+
 
             DirectToLoginText(navController = navController)
 

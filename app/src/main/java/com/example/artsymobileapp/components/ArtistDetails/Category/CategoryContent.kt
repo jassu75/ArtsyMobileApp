@@ -1,5 +1,6 @@
 package com.example.artsymobileapp.components.ArtistDetails.Category
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,11 @@ fun CategoryContent(categoryList: List<CategoryType>) {
     val carousalState = rememberPagerState(pageCount = { Int.MAX_VALUE })
     val coroutineScope = rememberCoroutineScope()
 
-    Row(modifier = content_container, verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = content_container,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
 
         IconButton(onClick = {
             if (carousalState.settledPage > 0) {

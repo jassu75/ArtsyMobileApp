@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 import com.example.artsymobileapp.components.network.ViewModel.ArtsyViewModel
 import com.example.artsymobileapp.components.network.types.userType.loginUserType
@@ -33,6 +35,7 @@ private val login_container = Modifier
     .padding(20.dp)
 private val login_items = Modifier.fillMaxWidth()
 
+private val login_items_container=Modifier.widthIn(max = 500.dp)
 
 @Composable
 fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
@@ -58,11 +61,11 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
 
     Box(modifier = login_container, contentAlignment = Alignment.Center) {
         Column(
-            modifier = login_items,
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column() {
+            Column(modifier = login_items_container) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = {
@@ -91,7 +94,7 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                     Text(text = emailErrorText, color = Color.Red)
                 }
             }
-            Column() {
+            Column(modifier = login_items_container) {
                 OutlinedTextField(
                     value = password,
                     onValueChange = {
@@ -121,7 +124,7 @@ fun LoginInput(navController: NavController, viewModel: ArtsyViewModel) {
                 }
             }
 
-            Column() {
+            Column(modifier = login_items_container) {
                 Button(
                     modifier = login_items,
                     enabled = !loading,
