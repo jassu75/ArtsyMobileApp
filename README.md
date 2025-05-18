@@ -10,12 +10,12 @@ Implemented Persistent CookieJar to securely validate users. Users remail logged
 
 ## Skills
 
-**Kotlin**
-**Jetpack Compose**
-**Android Studios**
-**Retrofit**
-**OkHttp**
-**Persistent CookieJar**
-**Express**
+**Kotlin**,
+**Jetpack Compose**,
+**Android Studios**,
+**Retrofit**,
+**OkHttp**,
+**Persistent CookieJar**,
+**Express**,
 **NodeJS**
 
