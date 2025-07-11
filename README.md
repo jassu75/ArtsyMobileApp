@@ -5,11 +5,6 @@
 ## Google Play Store App Link
 [Visit Google Playstore](https://play.google.com/store/apps/details?id=com.tejaskangod.artsymobileapp&pcampaignid=web_share)
 
-# Artsy World Website
-
-## Website Link
-[Visit the Application](https://tejas-artify-app.uw.r.appspot.com/)
-
 ## Demo Link
 [Visit Youtube](https://youtu.be/hZvGzY5E1-M?si=FIedmv1pFYYayh9M)
 
