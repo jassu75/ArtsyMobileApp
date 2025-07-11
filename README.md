@@ -50,16 +50,9 @@ You can view the information of the artists, their artwork, and art related to c
 <img width="406" height="847" alt="Screenshot 2025-05-15 121309" src="https://github.com/user-attachments/assets/9556717e-2ae6-4e84-a320-ddeaebdc39f2" />
 
 ### Favorites
-You can save your favorite artists to quickly access them whenever needed. In the favorites tab, click on the artist card to view the details of that artist immediately
+You can save your favorite artists to quickly access them whenever needed. In the favorites section, click on the artist card to view the details of that artist immediately
 
 <img width="405" height="834" alt="Screenshot 2025-05-15 121415" src="https://github.com/user-attachments/assets/84b9c50d-9678-49a6-aa3c-6d3ea0389423" />
-
-
-
-
-
-
-
 
 ## Skills
 
