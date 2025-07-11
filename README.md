@@ -2,9 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/8ca8c710-0ad2-4f76-be81-7c8340f9f097)
 
-### Note:
-The app is currently in closed testing. **Downloading link coming soon**
-
+## Google Play Store App Link
+[Visit Google Playstore](https://play.google.com/store/apps/details?id=com.tejaskangod.artsymobileapp&pcampaignid=web_share)
 
 ## Introduction
 Users are able to discover their favorite artists world wide, explore their artworks, and browse related art by category through an interactive search interface. 
