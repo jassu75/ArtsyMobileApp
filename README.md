@@ -21,7 +21,7 @@ Create an account with username, email and password. If you already have an acco
 
 **Note** : Creating account is not mandatory to run the app. It enhances your experience by giving you addditional features
 
-<img width="1344" height="2992" alt="image" src="https://github.com/user-attachments/assets/c115f52d-6e03-439d-a597-6b26648665ad" />
+<img width="384" height="843" alt="image" src="https://github.com/user-attachments/assets/c115f52d-6e03-439d-a597-6b26648665ad" />
 
 ### Search
 Search for the artists whose artworks you want to view
@@ -40,7 +40,13 @@ These features are not available otherwise
 You can view the information of the artists, their artwork, and art related to category. Furthermore , they can view artists whose work is similar to the one they selected.
 
 <img width="391" height="844" alt="Screenshot 2025-05-15 121330" src="https://github.com/user-attachments/assets/2471c555-3a07-441c-8ca2-9ad1ba07acac" />
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 <img width="400" height="848" alt="Screenshot 2025-05-15 114535" src="https://github.com/user-attachments/assets/9e5409a2-bcbd-468c-b87c-426b01f8e256" />
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 <img width="406" height="847" alt="Screenshot 2025-05-15 121309" src="https://github.com/user-attachments/assets/9556717e-2ae6-4e84-a320-ddeaebdc39f2" />
 
 ### Favorites
