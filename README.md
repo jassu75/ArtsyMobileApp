@@ -30,9 +30,10 @@ Search for the artists whose artworks you want to view
 
 ### Account auth
 
-The following features are available only to users who have successfully logged in
--Similar artists
--Saving your favorite artists
+The following features are available only to users who have successfully logged in:
+
+- Similar artists
+- Saving your favorite artists
 
 These features are not available otherwise
 
