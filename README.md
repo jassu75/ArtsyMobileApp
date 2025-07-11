@@ -12,7 +12,7 @@
 - Users are able to discover their favorite artists world wide, explore their artworks, and browse related art by category through an interactive search interface. 
 - Once user creates an account, they can save their favorite artists for quick access
 - Implement persistent cookies using CookieJar and Stored Preferences. The user auth is valid for 1 hour even if app closes.
-- 
+
 
 ## Directions
 
